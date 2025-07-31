@@ -1,0 +1,137 @@
+.navbar-root {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+ 
+  z-index: 1000;
+ 
+  height: 64px;
+  display: flex;
+  align-items: center;
+}
+
+.navbar-content {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+}
+
+.navbar-logo {
+  font-size: 40px;
+  font-weight: bold;
+  color: #ffd740;
+  text-decoration: none;
+  letter-spacing: 2px;
+}
+
+.navbar-links {
+  display: flex;
+  gap: 20px;
+}
+
+.navbar-link {
+  color: #ffd740;
+ 
+  font-size: 18px;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 8px 20px;
+  border-radius: 6px;
+  transition: background 0.2s, color 0.2s;
+  border: none;
+  outline: none;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.navbar-link:hover, .navbar-link.active {
+  background: #ffe082;
+  color: #23201d;
+}
+
+.navbar-cta {
+  background: #ffd740;
+  color: #23201d;
+  font-size: 20px;
+  font-weight: bold;
+  border-radius: 8px;
+  padding: 10px 32px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border: none;
+  outline: none;
+  transition: background 0.2s, color 0.2s;
+}
+
+.navbar-cta:hover {
+  background: #ffe082;
+  color: #23201d;
+}
+
+.navbar-signout {
+  background: transparent;
+  color: #ffd740;
+  border: 2px solid #ffd740;
+  font-size: 18px;
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 8px 20px;
+  transition: background 0.2s, color 0.2s, border 0.2s;
+  cursor: pointer;
+}
+
+.navbar-signout:hover {
+  background: #ffd740;
+  color: #23201d;
+} 
+
+@media (max-width: 800px) {
+  .navbar-links {
+    display: none;
+    position: absolute;
+    top: 60px;
+    right: 16px;
+    background: #fff;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+    border-radius: 12px;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 160px;
+    z-index: 100;
+    padding: 16px 0;
+  }
+  .navbar-links.open {
+    display: flex;
+  }
+  .navbar-hamburger {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-left: auto;
+    z-index: 101;
+  }
+  .hamburger-bar {
+    width: 28px;
+    height: 4px;
+    background: #ffd740;
+    margin: 3px 0;
+    border-radius: 2px;
+    transition: all 0.2s;
+    display: block;
+  }
+}
+
+@media (min-width: 801px) {
+  .navbar-hamburger {
+    display: none;
+  }
+} 

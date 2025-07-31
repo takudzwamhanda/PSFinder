@@ -1,0 +1,147 @@
+.footer-bg-root {
+  position: relative;
+  width: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin-top: 48px;
+  min-height: 340px;
+  display: flex;
+  align-items: flex-end;
+}
+
+.footer-bg-overlay {
+  width: 100%;
+  min-height: 340px;
+  background: rgba(30, 28, 26, 0.82);
+  backdrop-filter: blur(6px) saturate(1.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 0 24px 0;
+}
+
+.footer-bg-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 48px;
+  background: rgba(40, 38, 36, 0.55);
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  padding: 32px 48px;
+  margin-bottom: 18px;
+  max-width: 900px;
+  width: 95%;
+  backdrop-filter: blur(8px) saturate(1.3);
+}
+
+.footer-img-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer-img-main {
+  width: 140px;
+  height: auto;
+  border-radius: 18px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.18);
+  object-fit: cover;
+  background: #ffd740;
+  padding: 6px;
+}
+
+.footer-info-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.footer-logo-circle {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: #ffd740;
+  color: #23201d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.2rem;
+  font-weight: bold;
+  margin-bottom: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+
+.footer-app-name {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+
+.footer-nav-row {
+  display: flex;
+  gap: 18px;
+  margin-bottom: 6px;
+}
+
+.footer-link {
+  color: #ffd740;
+  text-decoration: none;
+  font-size: 1.08rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.footer-link:hover {
+  color: #fff;
+}
+
+.footer-contact-row {
+  color: #fff;
+  font-size: 1rem;
+  margin-bottom: 6px;
+  opacity: 0.92;
+}
+
+.footer-social-row {
+  display: flex;
+  gap: 16px;
+  margin-top: 2px;
+}
+
+.footer-social-icon svg {
+  display: block;
+  fill: #ffd740;
+  transition: fill 0.2s;
+}
+
+.footer-social-icon:hover svg {
+  fill: #fff;
+}
+
+.footer-modern-bottom {
+  text-align: center;
+  padding: 12px 0 0 0;
+  font-size: 15px;
+  color: #fff;
+  opacity: 0.85;
+}
+
+@media (max-width: 900px) {
+  .footer-bg-content {
+    flex-direction: column;
+    gap: 24px;
+    padding: 24px 12px;
+  }
+  .footer-img-main {
+    width: 100px;
+  }
+} 

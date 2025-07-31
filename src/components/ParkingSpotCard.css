@@ -1,0 +1,89 @@
+.parking-spot-card {
+  background: #fff;
+  color: #23201d;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(44,108,223,0.08);
+  margin: 1rem 0;
+  width: 100%;
+  max-width: 370px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #f0f0f0;
+  transition: box-shadow 0.2s;
+}
+.parking-spot-card:hover {
+  box-shadow: 0 6px 24px rgba(44,108,223,0.16);
+}
+
+.spot-image {
+  background: #ffe082 url('https://img.icons8.com/ios-filled/100/parking.png') center/48px no-repeat;
+  height: 140px;
+  width: 100%;
+}
+
+.spot-info {
+  padding: 1.1rem 1.2rem 1.2rem 1.2rem;
+  background: #fff;
+}
+
+.spot-address {
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-bottom: 0.2rem;
+  color: #23201d;
+}
+
+.spot-lot {
+  color: #757575;
+  font-size: 0.97rem;
+  margin-bottom: 0.7rem;
+}
+
+.spot-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.spot-price {
+  background: #fffbe6;
+  border-radius: 4px;
+  padding: 0.2rem 0.7rem;
+  font-weight: bold;
+  font-size: 1rem;
+  margin-right: 0.5rem;
+  border: 1px solid #ffd740;
+  color: #23201d;
+}
+
+.spot-btn {
+  background: #ffd740;
+  color: #23201d;
+  border: none;
+  border-radius: 4px;
+  padding: 0.3rem 0.7rem;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-weight: 600;
+}
+
+.spot-btn.selected, .spot-btn:active {
+  background: #fffbe6;
+  color: #23201d;
+}
+
+@media (max-width: 600px) {
+  .parking-spot-card {
+    max-width: 100%;
+    margin: 0.5rem 0;
+  }
+  .spot-image {
+    height: 90px;
+    background-size: 32px;
+  }
+  .spot-info {
+    padding: 0.7rem 0.7rem 0.9rem 0.7rem;
+  }
+} 

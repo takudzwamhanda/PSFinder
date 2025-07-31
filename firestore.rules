@@ -1,0 +1,39 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Users: Only the user can read/write their own profile
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Parking Spots: Anyone can read, authenticated users can write
+    match /parkingSpots/{spotId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    // Bookings: Users can create bookings for themselves and read/update/delete their own bookings
+    match /bookings/{bookingId} {
+      // Allow reading all bookings for availability checking
+      allow read: if request.auth != null;
+      // Only allow create if the booking is for the authenticated user
+      allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
+      // Only allow update/delete if the booking belongs to the authenticated user
+      allow update, delete: if request.auth != null && resource.data.userId == request.auth.uid;
+    }
+
+    // Payments: Users can create/read/update/delete their own payments
+    match /payments/{paymentId} {
+      allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
+      allow read, update, delete: if request.auth != null && resource.data.userId == request.auth.uid;
+    }
+
+    // Reviews: Anyone can read, users can create, update, or delete their own reviews
+    match /reviews/{reviewId} {
+      allow create: if request.auth != null;
+      allow read: if true;
+      allow update, delete: if request.auth != null && resource.data.userId == request.auth.uid;
+    }
+  }
+} 

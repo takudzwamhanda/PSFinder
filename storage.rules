@@ -1,0 +1,19 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Allow authenticated users to upload and read profile photos
+    match /profile-photos/{userId}/{allPaths=**} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Allow authenticated users to read all profile photos (for display purposes)
+    match /profile-photos/{allPaths=**} {
+      allow read: if request.auth != null;
+    }
+    
+    // Allow test uploads for debugging
+    match /test-connection.txt {
+      allow read, write: if request.auth != null;
+    }
+  }
+} 
