@@ -3,8 +3,9 @@ import './MySpots.css';
 import { useNavigate } from 'react-router-dom';
 import LeafletMapView from './LeafletMapView';
 import BottomNavOnly from './BottomNavOnly';
-import { db } from '../firebase';
+import { db, auth } from '../firebase';
 import { collection, getDocs, addDoc, query, where, updateDoc, doc } from 'firebase/firestore';
+import { signOut } from 'firebase/auth';
 import { AuthContext } from '../main';
 import ReactDOM from 'react-dom';
 
@@ -476,8 +477,11 @@ const MySpots = () => {
   };
 
   const handleViewModeToggle = () => {
+    console.log('View mode toggle clicked!');
     try {
-      setViewMode(viewMode === 'map' ? 'list' : 'map');
+      const newViewMode = viewMode === 'map' ? 'list' : 'map';
+      setViewMode(newViewMode);
+      console.log('View mode changed to:', newViewMode);
     } catch (error) {
       console.error('View mode toggle error:', error);
       alert('Failed to switch view mode. Please try again.');
@@ -485,14 +489,14 @@ const MySpots = () => {
   };
 
   const handleRefresh = () => {
+    console.log('Refresh button clicked!');
     try {
       setLastFetchTime(null);
       setError(null);
-      // Force a fresh fetch of spots by calling the useEffect logic
+      setLoading(true);
+      
+      // Force a fresh fetch of spots
       const fetchSpotsWithAvailability = async () => {
-        setLoading(true);
-        setError(null);
-        
         try {
           const querySnapshot = await getDocs(collection(db, "parkingSpots"));
           const spots = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -507,6 +511,7 @@ const MySpots = () => {
           
           setParkingSpots(spotsWithAvailability);
           setLastFetchTime(new Date());
+          console.log('Refresh completed successfully');
         } catch (error) {
           console.error('Error fetching spots:', error);
           setError('Failed to load parking spots. Please try again.');
@@ -522,11 +527,29 @@ const MySpots = () => {
     }
   };
 
+  const handleSignOut = () => {
+    console.log('Sign out button clicked!');
+    try {
+      signOut(auth).then(() => {
+        console.log('User signed out successfully');
+        navigate('/');
+      }).catch((error) => {
+        console.error('Sign out error:', error);
+        alert('Failed to sign out. Please try again.');
+      });
+    } catch (error) {
+      console.error('Sign out error:', error);
+      alert('Failed to sign out. Please try again.');
+    }
+  };
+
   const handleSearch = (e) => {
     e.preventDefault();
+    console.log('Search button clicked!');
     try {
       // The search is already handled by the filteredSpots logic
       // This just provides visual feedback that search was triggered
+      console.log('Search triggered for:', searchQuery);
     } catch (error) {
       console.error('Search error:', error);
       alert('Search failed. Please try again.');
@@ -610,7 +633,7 @@ const MySpots = () => {
             </button>
             <button 
               type="button"
-              onClick={handleHomeClick}
+              onClick={handleSignOut}
               style={{
                 padding: '12px 20px',
                 fontSize: '14px',
