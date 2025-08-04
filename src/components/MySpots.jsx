@@ -506,21 +506,20 @@ const MySpots = () => {
                  setLastFetchTime(null);
                  setError(null);
                }}
-               style={{
-                 padding: '10px 16px',
-                 fontSize: '0.9rem',
-                 fontWeight: '600',
-                 border: 'none',
-                 borderRadius: '8px',
-                 cursor: 'pointer',
-                 transition: 'all 0.3s ease',
-                 display: 'flex',
-                 alignItems: 'center',
-                 gap: '6px',
-                 background: 'rgba(76, 175, 80, 0.1)',
-                 color: '#4caf50',
-                 border: '1px solid rgba(76, 175, 80, 0.3)'
-               }}
+                               style={{
+                  padding: '10px 16px',
+                  fontSize: '0.9rem',
+                  fontWeight: '600',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  background: 'rgba(76, 175, 80, 0.1)',
+                  color: '#4caf50',
+                  border: '1px solid rgba(76, 175, 80, 0.3)'
+                }}
              >
                🔄 Refresh
              </button>
