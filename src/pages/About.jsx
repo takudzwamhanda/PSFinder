@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './About.css';
-// import NicoleImg from '../imgs/nicole.jpg'; // Commented out - image file missing
+import NicoleImg from '../imgs/Nicole.jpg';
 import AlvisImg from '../imgs/Alvis.jpg';
 import DasylynImg from '../imgs/dasylyn.jpg';
 
@@ -74,8 +74,7 @@ const About = () => (
       <h2 className="about-subtitle">Meet the Team</h2>
       <div className="about-team">
         <div className="about-team-member">
-                          {/* <img src={NicoleImg} alt="Nicole" className="about-team-img" /> */}
-                <div className="about-team-img-placeholder">Nicole</div>
+                          <img src={NicoleImg} alt="Nicole" className="about-team-img" />
           <div className="about-team-name">Nicole</div>
           <div className="about-team-role">Product Manager</div>
         </div>
