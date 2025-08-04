@@ -287,6 +287,37 @@ const MySpots = () => {
     user = null;
   }
 
+  // Function to check if a spot is available
+  const checkSpotAvailability = async (spotId) => {
+    try {
+      const now = new Date();
+      const bookingsQuery = query(
+        collection(db, 'bookings'),
+        where('spotId', '==', spotId),
+        where('status', 'in', ['pending', 'confirmed'])
+      );
+      
+      const querySnapshot = await getDocs(bookingsQuery);
+      const activeBookings = [];
+      
+      querySnapshot.forEach(doc => {
+        const booking = doc.data();
+        const bookingDateTime = new Date(booking.bookingDateTime);
+        const endTime = new Date(bookingDateTime.getTime() + (2 * 60 * 60 * 1000)); // 2 hours duration
+        
+        // Check if booking is currently active
+        if (now >= bookingDateTime && now <= endTime) {
+          activeBookings.push(booking);
+        }
+      });
+      
+      return activeBookings.length === 0; // Available if no active bookings
+    } catch (error) {
+      console.error('Error checking spot availability:', error);
+      return true; // Assume available if error
+    }
+  };
+
   useEffect(() => {
     const fetchSpotsWithAvailability = async () => {
       setLoading(true);
@@ -457,7 +488,33 @@ const MySpots = () => {
     try {
       setLastFetchTime(null);
       setError(null);
-      // Force a fresh fetch of spots
+      // Force a fresh fetch of spots by calling the useEffect logic
+      const fetchSpotsWithAvailability = async () => {
+        setLoading(true);
+        setError(null);
+        
+        try {
+          const querySnapshot = await getDocs(collection(db, "parkingSpots"));
+          const spots = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          
+          // Check availability for each spot
+          const spotsWithAvailability = await Promise.all(
+            spots.map(async (spot) => {
+              const isAvailable = await checkSpotAvailability(spot.id);
+              return { ...spot, availability: isAvailable };
+            })
+          );
+          
+          setParkingSpots(spotsWithAvailability);
+          setLastFetchTime(new Date());
+        } catch (error) {
+          console.error('Error fetching spots:', error);
+          setError('Failed to load parking spots. Please try again.');
+        } finally {
+          setLoading(false);
+        }
+      };
+      
       fetchSpotsWithAvailability();
     } catch (error) {
       console.error('Refresh error:', error);
