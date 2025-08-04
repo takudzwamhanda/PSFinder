@@ -200,8 +200,10 @@ const LeafletMapView = () => {
       }
       setLoading(false);
     };
+    
+    // Only fetch spots once on component mount
     fetchSpots();
-  }, []);
+  }, []); // Empty dependency array to run only once
 
   // Real-time availability checking
   useEffect(() => {

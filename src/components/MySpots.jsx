@@ -289,68 +289,34 @@ const MySpots = () => {
 
   useEffect(() => {
     const fetchSpotsWithAvailability = async () => {
-      // Check if we have recent data (cache for 30 seconds)
-      const now = Date.now();
-      if (lastFetchTime && (now - lastFetchTime) < 30000 && parkingSpots.length > 0) {
-        setLoading(false);
-        return;
-      }
-      
       setLoading(true);
       setError(null);
       
       try {
-        // Fetch all parking spots in one query
-        const spotsQuery = await getDocs(collection(db, "parkingSpots"));
-        const spots = spotsQuery.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        const querySnapshot = await getDocs(collection(db, "parkingSpots"));
+        const spots = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         
-        // Filter out test spots
-        const realSpots = spots.filter(spot => 
-          !spot.isTest && 
-          !spot.name?.toLowerCase().includes('test') && 
-          !spot.address?.toLowerCase().includes('test')
+        // Check availability for each spot
+        const spotsWithAvailability = await Promise.all(
+          spots.map(async (spot) => {
+            const isAvailable = await checkSpotAvailability(spot.id);
+            return { ...spot, availability: isAvailable };
+          })
         );
         
-        setParkingSpots(realSpots);
-        
-        // Fetch all active bookings in one query instead of multiple queries
-        const currentTime = new Date();
-        const bookingsQuery = query(
-          collection(db, 'bookings'),
-          where('status', 'in', ['pending', 'confirmed'])
-        );
-        
-        const bookingsSnapshot = await getDocs(bookingsQuery);
-        const availabilityMap = {};
-        
-        // Initialize all spots as available
-        realSpots.forEach(spot => {
-          availabilityMap[spot.id] = true;
-        });
-        
-        // Check which spots are currently occupied
-        bookingsSnapshot.forEach(doc => {
-          const booking = doc.data();
-          const bookingDateTime = new Date(booking.bookingDateTime);
-          const endTime = new Date(bookingDateTime.getTime() + (2 * 60 * 60 * 1000)); // 2 hours duration
-          
-          // If booking is currently active, mark spot as unavailable
-          if (currentTime >= bookingDateTime && currentTime <= endTime) {
-            availabilityMap[booking.spotId] = false;
-          }
-        });
-        
-        setActiveBookings(availabilityMap);
-        setLastFetchTime(now);
+        setParkingSpots(spotsWithAvailability);
+        setLastFetchTime(new Date());
       } catch (error) {
-        console.error("Error fetching parking spots:", error);
-        setError("Failed to load parking spots. Please try again.");
+        console.error('Error fetching spots:', error);
+        setError('Failed to load parking spots. Please try again.');
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
-    
+
+    // Only fetch spots once on component mount
     fetchSpotsWithAvailability();
-  }, [lastFetchTime, parkingSpots.length]);
+  }, []); // Empty dependency array to run only once
 
   // Remove the separate availability checking useEffect since we now do it in one query
 
@@ -363,16 +329,8 @@ const MySpots = () => {
 
   const handleBookingSubmit = async (e) => {
     e.preventDefault();
-    console.log('=== BOOKING SUBMISSION DEBUG ===');
-    console.log('handleBookingSubmit called');
-    console.log('Current user:', user);
-    console.log('User UID:', user?.uid);
-    console.log('Booking spot:', bookingSpot);
-    console.log('Booking date:', bookingDate);
-    console.log('Booking time:', bookingTime);
     
     if (!user || !user.uid) {
-      console.error('No user or user.uid found!');
       alert('Please log in to book a spot.');
       return;
     }
@@ -399,7 +357,6 @@ const MySpots = () => {
     }
 
     const bookingUserId = user.uid;
-    console.log('Booking userId:', bookingUserId);
     
     // Validate payment method
     if (!selectedPaymentMethod) {
@@ -435,14 +392,9 @@ const MySpots = () => {
       createdAt: new Date().toISOString()
     };
     
-    console.log('Full booking data object:', bookingData);
-    console.log('About to call addDoc with collection:', collection(db, 'bookings'));
-    console.log('=== END DEBUG ===');
-
     try {
       // Create booking
       const bookingRef = await addDoc(collection(db, 'bookings'), bookingData);
-      console.log('Booking created successfully with ID:', bookingRef.id);
       
       // Create payment record
       const paymentData = {
@@ -464,8 +416,6 @@ const MySpots = () => {
       };
       
       await addDoc(collection(db, 'payments'), paymentData);
-      console.log('Payment created successfully');
-      
       alert('Booking confirmed and payment processed! Check your bookings page.');
       setShowBookingModal(false);
       setBookingSpot(null);
@@ -495,10 +445,8 @@ const MySpots = () => {
   };
 
   const handleViewModeToggle = () => {
-    console.log('View mode toggle clicked!');
     try {
       setViewMode(viewMode === 'map' ? 'list' : 'map');
-      console.log('View mode changed to:', viewMode === 'map' ? 'list' : 'map');
     } catch (error) {
       console.error('View mode toggle error:', error);
       alert('Failed to switch view mode. Please try again.');
@@ -506,13 +454,11 @@ const MySpots = () => {
   };
 
   const handleRefresh = () => {
-    console.log('Refresh button clicked!');
     try {
       setLastFetchTime(null);
       setError(null);
       // Force a fresh fetch of spots
       fetchSpotsWithAvailability();
-      console.log('Refresh completed');
     } catch (error) {
       console.error('Refresh error:', error);
       alert('Failed to refresh data. Please try again.');
@@ -520,12 +466,10 @@ const MySpots = () => {
   };
 
   const handleSearch = (e) => {
-    console.log('Search button clicked!');
     e.preventDefault();
     try {
       // The search is already handled by the filteredSpots logic
       // This just provides visual feedback that search was triggered
-      console.log('Search triggered for:', searchQuery);
     } catch (error) {
       console.error('Search error:', error);
       alert('Search failed. Please try again.');
