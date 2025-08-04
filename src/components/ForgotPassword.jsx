@@ -18,20 +18,37 @@ const ForgotPassword = () => {
     setMessage("");
 
     try {
-      await sendPasswordResetEmail(auth, email);
+      // Configure password reset with action code settings
+      const actionCodeSettings = {
+        url: window.location.origin + '/login', // Redirect to login page after reset
+        handleCodeInApp: false,
+      };
+
+      await sendPasswordResetEmail(auth, email, actionCodeSettings);
       setLoading(false);
-      setMessage("Password reset email sent! Check your inbox and follow the instructions to reset your password.");
+      setMessage("Password reset email sent! Check your inbox and spam folder. Follow the instructions to reset your password.");
     } catch (err) {
       setLoading(false);
-      console.log(err);
-      if (err.code === 'auth/user-not-found') {
-        setError("No account found with this email address.");
-      } else if (err.code === 'auth/too-many-requests') {
-        setError("Too many requests. Please wait a while before trying again.");
-      } else if (err.code === 'auth/invalid-email') {
-        setError("Please enter a valid email address.");
-      } else {
-        setError(err.message || "Failed to send password reset email.");
+      console.error('Password reset error:', err);
+      
+      switch (err.code) {
+        case 'auth/user-not-found':
+          setError("No account found with this email address.");
+          break;
+        case 'auth/too-many-requests':
+          setError("Too many requests. Please wait a few minutes before trying again.");
+          break;
+        case 'auth/invalid-email':
+          setError("Please enter a valid email address.");
+          break;
+        case 'auth/network-request-failed':
+          setError("Network error. Please check your internet connection and try again.");
+          break;
+        case 'auth/operation-not-allowed':
+          setError("Password reset is not enabled for this app. Please contact support.");
+          break;
+        default:
+          setError("Failed to send password reset email. Please try again or contact support.");
       }
     }
   };

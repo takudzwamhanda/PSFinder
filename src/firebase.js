@@ -1,8 +1,8 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
-import { getStorage } from "firebase/storage";
+import { getAuth, connectAuthEmulator } from "firebase/auth";
+import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
+import { getStorage, connectStorageEmulator } from "firebase/storage";
 
 // TODO: Replace the following with your app's Firebase project configuration
 const firebaseConfig = {
@@ -15,9 +15,23 @@ const firebaseConfig = {
   measurementId: "G-DEMWD5SCND"
 };
 
-
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
-export const storage = getStorage(app); 
+export const storage = getStorage(app);
+
+// Configure auth for production
+auth.useDeviceLanguage();
+auth.settings.appVerificationDisabledForTesting = false;
+
+// Add better error handling for authentication
+auth.onAuthStateChanged((user) => {
+  if (user) {
+    console.log('User is signed in:', user.email);
+  } else {
+    console.log('User is signed out');
+  }
+}, (error) => {
+  console.error('Auth state change error:', error);
+}); 
