@@ -9,6 +9,7 @@ const EmailVerification = () => {
   const [loading, setLoading] = useState(true);
   const [resendLoading, setResendLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState(""); // "success" or "error"
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -32,17 +33,20 @@ const EmailVerification = () => {
     
     setResendLoading(true);
     setMessage("");
+    setMessageType("");
     
     try {
-              await sendEmailVerification(user, {
-          url: window.location.origin + '/login',
-          handleCodeInApp: false
-        });
-        setMessage("Verification email sent! Please check your inbox and spam folder.");
-      } catch (error) {
-        console.error('Verification error:', error);
-        setMessage("Email verification service temporarily unavailable. Please try logging in directly.");
-      } finally {
+      await sendEmailVerification(user, {
+        url: window.location.origin + '/login',
+        handleCodeInApp: false
+      });
+      setMessage("✅ Verification email sent successfully! Please check your inbox and spam folder.");
+      setMessageType("success");
+    } catch (error) {
+      console.error('Verification error:', error);
+      setMessage("❌ Email verification service temporarily unavailable. Please try logging in directly.");
+      setMessageType("error");
+    } finally {
       setResendLoading(false);
     }
   };
@@ -87,74 +91,183 @@ const EmailVerification = () => {
       <h2 className="login-title">Verify Your Email</h2>
       
       <div style={{
-        background: 'rgba(255, 215, 64, 0.1)',
+        background: 'linear-gradient(135deg, rgba(255, 215, 64, 0.1), rgba(255, 215, 64, 0.05))',
         border: '1px solid rgba(255, 215, 64, 0.3)',
-        borderRadius: '12px',
-        padding: '20px',
-        marginBottom: '20px',
-        textAlign: 'center'
+        borderRadius: '16px',
+        padding: '24px',
+        marginBottom: '24px',
+        textAlign: 'center',
+        boxShadow: '0 4px 12px rgba(255, 215, 64, 0.1)'
       }}>
-        <div style={{ fontSize: '1.1rem', marginBottom: '12px', color: '#ffd740' }}>
+        <div style={{ 
+          fontSize: '1.2rem', 
+          marginBottom: '16px', 
+          color: '#ffd740',
+          fontWeight: '600'
+        }}>
           📧 Check your email
         </div>
-        <div style={{ opacity: '0.8', marginBottom: '16px' }}>
+        <div style={{ 
+          opacity: '0.9', 
+          marginBottom: '16px',
+          fontSize: '16px',
+          lineHeight: '1.5'
+        }}>
           We've sent a verification link to:
           <br />
-          <strong>{user?.email}</strong>
+          <strong style={{ 
+            color: '#ffd740',
+            fontSize: '18px',
+            wordBreak: 'break-all'
+          }}>
+            {user?.email}
+          </strong>
         </div>
-        <div style={{ fontSize: '14px', opacity: '0.7' }}>
+        <div style={{ 
+          fontSize: '14px', 
+          opacity: '0.8',
+          lineHeight: '1.4'
+        }}>
           Click the link in your email to verify your account.
           <br />
-          Don't forget to check your spam folder!
+          <span style={{ color: '#ffd740' }}>💡 Don't forget to check your spam folder!</span>
         </div>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+      <div style={{ 
+        display: 'flex', 
+        flexDirection: 'column', 
+        gap: '16px',
+        marginBottom: '20px'
+      }}>
         <button
-          className="login-btn"
           onClick={handleResendVerification}
           disabled={resendLoading}
-          style={{ marginBottom: '8px' }}
+          style={{
+            background: 'linear-gradient(135deg, #ffd740, #ffe082)',
+            color: '#23201d',
+            border: 'none',
+            borderRadius: '12px',
+            padding: '16px 24px',
+            fontWeight: '600',
+            fontSize: '16px',
+            cursor: resendLoading ? 'not-allowed' : 'pointer',
+            opacity: resendLoading ? 0.7 : 1,
+            transition: 'all 0.3s ease',
+            boxShadow: '0 4px 12px rgba(255, 215, 64, 0.3)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px'
+          }}
+          onMouseEnter={(e) => {
+            if (!resendLoading) {
+              e.target.style.transform = 'translateY(-2px)';
+              e.target.style.boxShadow = '0 6px 16px rgba(255, 215, 64, 0.4)';
+            }
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.transform = 'translateY(0)';
+            e.target.style.boxShadow = '0 4px 12px rgba(255, 215, 64, 0.3)';
+          }}
         >
-          {resendLoading ? "Sending..." : "Resend Verification Email"}
+          {resendLoading ? (
+            <>
+              <div style={{
+                width: '16px',
+                height: '16px',
+                border: '2px solid rgba(35, 32, 29, 0.3)',
+                borderTop: '2px solid #23201d',
+                borderRadius: '50%',
+                animation: 'spin 1s linear infinite'
+              }} />
+              Sending...
+            </>
+          ) : (
+            <>
+              📧 Resend Verification Email
+            </>
+          )}
         </button>
         
         <button
-          className="login-btn"
           onClick={handleRefresh}
           style={{
-            background: 'rgba(255, 255, 255, 0.1)',
-            border: '1px solid rgba(255, 255, 255, 0.2)'
+            background: 'linear-gradient(135deg, #4caf50, #66bb6a)',
+            color: '#ffffff',
+            border: 'none',
+            borderRadius: '12px',
+            padding: '16px 24px',
+            fontWeight: '600',
+            fontSize: '16px',
+            cursor: 'pointer',
+            transition: 'all 0.3s ease',
+            boxShadow: '0 4px 12px rgba(76, 175, 80, 0.3)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px'
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.transform = 'translateY(-2px)';
+            e.target.style.boxShadow = '0 6px 16px rgba(76, 175, 80, 0.4)';
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.transform = 'translateY(0)';
+            e.target.style.boxShadow = '0 4px 12px rgba(76, 175, 80, 0.3)';
           }}
         >
-          I've Verified My Email
+          ✅ I've Verified My Email
         </button>
       </div>
 
       {message && (
         <div style={{
-          color: message.includes('sent') ? '#4caf50' : '#ffd740',
+          color: messageType === "success" ? '#4caf50' : '#ff9800',
           marginTop: '16px',
           textAlign: 'center',
-          fontSize: '14px'
+          fontSize: '14px',
+          padding: '12px',
+          borderRadius: '8px',
+          background: messageType === "success" ? 'rgba(76, 175, 80, 0.1)' : 'rgba(255, 152, 0, 0.1)',
+          border: `1px solid ${messageType === "success" ? 'rgba(76, 175, 80, 0.3)' : 'rgba(255, 152, 0, 0.3)'}`,
+          fontWeight: '500'
         }}>
           {message}
         </div>
       )}
 
       <div style={{
-        color: '#fff',
         textAlign: 'center',
         marginTop: '24px',
-        fontSize: '14px',
-        opacity: '0.7'
+        paddingTop: '20px',
+        borderTop: '1px solid rgba(255, 255, 255, 0.1)'
       }}>
         <button 
           type="button"
-          className="verification-back-btn" 
           onClick={handleBackToLogin}
+          style={{
+            background: 'transparent',
+            color: '#ffd740',
+            border: '1px solid rgba(255, 215, 64, 0.3)',
+            borderRadius: '8px',
+            padding: '12px 24px',
+            fontWeight: '500',
+            fontSize: '14px',
+            cursor: 'pointer',
+            transition: 'all 0.3s ease',
+            opacity: '0.8'
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.opacity = '1';
+            e.target.style.background = 'rgba(255, 215, 64, 0.1)';
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.opacity = '0.8';
+            e.target.style.background = 'transparent';
+          }}
         >
-          Back to Login
+          ← Back to Login
         </button>
       </div>
     </div>

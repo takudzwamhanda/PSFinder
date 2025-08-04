@@ -494,53 +494,138 @@ const MySpots = () => {
     }
   };
 
+  const handleViewModeToggle = () => {
+    try {
+      setViewMode(viewMode === 'map' ? 'list' : 'map');
+    } catch (error) {
+      console.error('View mode toggle error:', error);
+      alert('Failed to switch view mode. Please try again.');
+    }
+  };
+
+  const handleRefresh = () => {
+    try {
+      setLastFetchTime(null);
+      setError(null);
+      // Force a fresh fetch of spots
+      fetchSpotsWithAvailability();
+    } catch (error) {
+      console.error('Refresh error:', error);
+      alert('Failed to refresh data. Please try again.');
+    }
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    try {
+      // The search is already handled by the filteredSpots logic
+      // This just provides visual feedback that search was triggered
+      console.log('Search triggered for:', searchQuery);
+    } catch (error) {
+      console.error('Search error:', error);
+      alert('Search failed. Please try again.');
+    }
+  };
+
   return (
     <div className="myspots-root">
-             {/* Modern Header */}
-       <header className="myspots-header">
-         <div className="header-content">
-                       <div className="header-left">
-              {/* Header content without logo since LogoOnlyNavbar handles it */}
-            </div>
-           <div className="header-actions">
-             <button 
-               className="filter-btn"
-               onClick={() => setViewMode(viewMode === 'map' ? 'list' : 'map')}
-             >
-               {viewMode === 'map' ? ' List View' : ' Map View'}
-             </button>
-             <button 
-               className="refresh-btn"
-               onClick={() => {
-                 setLastFetchTime(null);
-                 setError(null);
-               }}
-                               style={{
-                  padding: '10px 16px',
-                  fontSize: '0.9rem',
-                  fontWeight: '600',
-                  borderRadius: '8px',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  background: 'rgba(76, 175, 80, 0.1)',
-                  color: '#4caf50',
-                  border: '1px solid rgba(76, 175, 80, 0.3)'
-                }}
-             >
-               🔄 Refresh
-             </button>
-             <button 
-               className="logout-btn"
-               onClick={handleHomeClick}
-             >
-               Sign Out
-             </button>
-           </div>
-         </div>
-       </header>
+      {/* Modern Header */}
+      <header className="myspots-header">
+        <div className="header-content">
+          <div className="header-left">
+            {/* Header content without logo since LogoOnlyNavbar handles it */}
+          </div>
+          <div className="header-actions">
+            <button 
+              className="filter-btn"
+              onClick={handleViewModeToggle}
+              style={{
+                padding: '10px 16px',
+                fontSize: '0.9rem',
+                fontWeight: '600',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                background: 'linear-gradient(135deg, #ffd740, #ffe082)',
+                color: '#23201d',
+                border: 'none',
+                boxShadow: '0 2px 8px rgba(255, 215, 64, 0.3)'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.transform = 'translateY(-1px)';
+                e.target.style.boxShadow = '0 4px 12px rgba(255, 215, 64, 0.4)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.transform = 'translateY(0)';
+                e.target.style.boxShadow = '0 2px 8px rgba(255, 215, 64, 0.3)';
+              }}
+            >
+              {viewMode === 'map' ? '📋 List View' : '🗺️ Map View'}
+            </button>
+            <button 
+              className="refresh-btn"
+              onClick={handleRefresh}
+              style={{
+                padding: '10px 16px',
+                fontSize: '0.9rem',
+                fontWeight: '600',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                background: 'linear-gradient(135deg, #4caf50, #66bb6a)',
+                color: '#ffffff',
+                border: 'none',
+                boxShadow: '0 2px 8px rgba(76, 175, 80, 0.3)'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.transform = 'translateY(-1px)';
+                e.target.style.boxShadow = '0 4px 12px rgba(76, 175, 80, 0.4)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.transform = 'translateY(0)';
+                e.target.style.boxShadow = '0 2px 8px rgba(76, 175, 80, 0.3)';
+              }}
+            >
+              🔄 Refresh
+            </button>
+            <button 
+              className="logout-btn"
+              onClick={handleHomeClick}
+              style={{
+                padding: '10px 16px',
+                fontSize: '0.9rem',
+                fontWeight: '600',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                background: 'linear-gradient(135deg, #f44336, #e57373)',
+                color: '#ffffff',
+                border: 'none',
+                boxShadow: '0 2px 8px rgba(244, 67, 54, 0.3)'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.transform = 'translateY(-1px)';
+                e.target.style.boxShadow = '0 4px 12px rgba(244, 67, 54, 0.4)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.transform = 'translateY(0)';
+                e.target.style.boxShadow = '0 2px 8px rgba(244, 67, 54, 0.3)';
+              }}
+            >
+              🚪 Sign Out
+            </button>
+          </div>
+        </div>
+      </header>
 
       {/* Search and Filters Section */}
       <section className="search-filters-section">
@@ -552,8 +637,37 @@ const MySpots = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="search-input"
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  handleSearch(e);
+                }
+              }}
             />
-            <button className="search-btn">Search</button>
+            <button 
+              className="search-btn"
+              onClick={handleSearch}
+              style={{
+                background: 'linear-gradient(135deg, #ffd740, #ffe082)',
+                color: '#23201d',
+                border: 'none',
+                borderRadius: '8px',
+                padding: '12px 20px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                boxShadow: '0 2px 8px rgba(255, 215, 64, 0.3)'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.transform = 'translateY(-1px)';
+                e.target.style.boxShadow = '0 4px 12px rgba(255, 215, 64, 0.4)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.transform = 'translateY(0)';
+                e.target.style.boxShadow = '0 2px 8px rgba(255, 215, 64, 0.3)';
+              }}
+            >
+              🔍 Search
+            </button>
           </div>
           
           <div className="filters-container">
