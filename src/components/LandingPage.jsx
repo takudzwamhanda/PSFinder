@@ -7,6 +7,16 @@ import { useNavigate } from 'react-router-dom';
 
 const LandingPage = ({ user }) => {
   const navigate = useNavigate();
+
+  const handleSignUpClick = () => {
+    try {
+      navigate('/register');
+    } catch (error) {
+      console.error('Navigation error:', error);
+      alert('Navigation failed. Please try again.');
+    }
+  };
+
   return (
     <div className="page-decor-right">
       <div className="landing-root">
@@ -36,7 +46,7 @@ const LandingPage = ({ user }) => {
               Real-time parking spot search, reservation, and payment. Hassle-free parking for drivers and easy management for lot owners.
             </p>
             <div className="hero-buttons" style={{ justifyContent: 'center' }}>
-              <button className="hero-btn yellow" onClick={() => navigate('/register')}>Sign Up Free</button>
+              <button className="hero-btn yellow" onClick={handleSignUpClick}>Sign Up Free</button>
             </div>
           </div>
         </section>

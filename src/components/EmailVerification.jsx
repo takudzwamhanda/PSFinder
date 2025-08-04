@@ -51,6 +51,15 @@ const EmailVerification = () => {
     window.location.reload();
   };
 
+  const handleBackToLogin = () => {
+    try {
+      navigate('/login');
+    } catch (error) {
+      console.error('Navigation error:', error);
+      alert('Navigation failed. Please try again.');
+    }
+  };
+
   if (loading) {
     return (
       <div className="login-container">
@@ -140,13 +149,13 @@ const EmailVerification = () => {
         fontSize: '14px',
         opacity: '0.7'
       }}>
-        <span
-          className="register-link"
-          style={{ cursor: 'pointer' }}
-          onClick={() => navigate('/login')}
+        <button 
+          type="button"
+          className="verification-back-btn" 
+          onClick={handleBackToLogin}
         >
           Back to Login
-        </span>
+        </button>
       </div>
     </div>
   );

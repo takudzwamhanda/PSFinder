@@ -3,9 +3,30 @@ import { useNavigate } from 'react-router-dom';
 import './LandingPage2.css';
 import homeBackVideo from '../video/home back 1.mp4';
 import FooterCTA from './FooterCTA';
+import { useAuth } from '../main.jsx';
 
 const LandingPage2 = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const handleNavigation = (path) => {
+    try {
+      // Check if user is authenticated for protected routes
+      const protectedRoutes = ['/my-spots', '/my-bookings', '/payments', '/reviews', '/profile', '/owner-dashboard'];
+      
+      if (protectedRoutes.includes(path) && !user) {
+        alert('Please log in to access this feature.');
+        navigate('/login');
+        return;
+      }
+      
+      navigate(path);
+    } catch (error) {
+      console.error('Navigation error:', error);
+      alert('Navigation failed. Please try again.');
+    }
+  };
+
   return (
     <div className="landing2-root">
       <section className="landing2-hero">
@@ -108,43 +129,43 @@ const LandingPage2 = () => {
           {/* Feature Cards Section */}
           <div className="feature-cards-section">
             <div className="feature-cards-grid">
-              <div className="feature-card" onClick={() => navigate('/my-spots')}>
+              <div className="feature-card" onClick={() => handleNavigation('/my-spots')}>
                 <h4>Find Parking Spots</h4>
                 <p>Browse available parking spots on our interactive map with real-time availability</p>
                 <div className="feature-card-arrow">→</div>
               </div>
 
-              <div className="feature-card" onClick={() => navigate('/my-bookings')}>
+              <div className="feature-card" onClick={() => handleNavigation('/my-bookings')}>
                 <h4>My Bookings</h4>
                 <p>Manage your current and past reservations, view booking history and status</p>
                 <div className="feature-card-arrow">→</div>
               </div>
 
-              <div className="feature-card" onClick={() => navigate('/payments')}>
+              <div className="feature-card" onClick={() => handleNavigation('/payments')}>
                 <h4>Payment History</h4>
                 <p>View your payment history, receipts, and manage your payment methods</p>
                 <div className="feature-card-arrow">→</div>
               </div>
 
-              <div className="feature-card" onClick={() => navigate('/reviews')}>
+              <div className="feature-card" onClick={() => handleNavigation('/reviews')}>
                 <h4>Reviews & Comments</h4>
                 <p>Read user reviews, share your experience, and join the community discussion</p>
                 <div className="feature-card-arrow">→</div>
               </div>
 
-              <div className="feature-card" onClick={() => navigate('/profile')}>
+              <div className="feature-card" onClick={() => handleNavigation('/profile')}>
                 <h4>Profile Settings</h4>
                 <p>Update your personal information, preferences, and account settings</p>
                 <div className="feature-card-arrow">→</div>
               </div>
 
-              <div className="feature-card" onClick={() => navigate('/about')}>
+              <div className="feature-card" onClick={() => handleNavigation('/about')}>
                 <h4>About Us</h4>
                 <p>Learn more about our mission, team, and how we're revolutionizing parking</p>
                 <div className="feature-card-arrow">→</div>
               </div>
 
-              <div className="feature-card" onClick={() => navigate('/owner-dashboard')}>
+              <div className="feature-card" onClick={() => handleNavigation('/owner-dashboard')}>
                 <h4>Owner Dashboard</h4>
                 <p>For parking spot owners - manage your listings, view earnings, and analytics</p>
                 <div className="feature-card-arrow">→</div>

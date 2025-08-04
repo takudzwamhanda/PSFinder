@@ -485,6 +485,15 @@ const MySpots = () => {
     }
   };
 
+  const handleHomeClick = () => {
+    try {
+      navigate('/');
+    } catch (error) {
+      console.error('Navigation error:', error);
+      alert('Navigation failed. Please try again.');
+    }
+  };
+
   return (
     <div className="myspots-root">
              {/* Modern Header */}
@@ -525,7 +534,7 @@ const MySpots = () => {
              </button>
              <button 
                className="logout-btn"
-               onClick={() => navigate('/')}
+               onClick={handleHomeClick}
              >
                Sign Out
              </button>

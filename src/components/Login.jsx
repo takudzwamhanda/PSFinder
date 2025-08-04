@@ -71,6 +71,24 @@ const Login = () => {
     }
   };
 
+  const handleForgotPassword = () => {
+    try {
+      navigate('/forgot-password');
+    } catch (error) {
+      console.error('Navigation error:', error);
+      alert('Navigation failed. Please try again.');
+    }
+  };
+
+  const handleRegisterClick = () => {
+    try {
+      navigate('/register');
+    } catch (error) {
+      console.error('Navigation error:', error);
+      alert('Navigation failed. Please try again.');
+    }
+  };
+
   return (
     <div className="login-container">
       <div className="login-logo">P</div>
@@ -92,24 +110,20 @@ const Login = () => {
           className="login-input"
           required
         />
-        <button className="login-btn" type="submit" disabled={loading}>
-          {loading ? "Logging in..." : "Login"}
+        <button type="submit" className="login-btn">
+          {loading ? 'Signing In...' : 'Sign In'}
         </button>
         {error && <div style={{ color: '#ffd740', marginTop: 10, textAlign: 'center' }}>{error}</div>}
       </form>
-      <div className="forgot-password">
-        <span 
-          className="forgot-password-link" 
-          style={{ cursor: 'pointer' }} 
-          onClick={() => navigate('/forgot-password')}
+      <div className="login-links">
+        <button 
+          type="button"
+          className="forgot-password-btn" 
+          onClick={handleForgotPassword}
         >
           Forgot Password?
-        </span>
-      </div>
-      <div className="login-register">
-        <span>Don't have an account? Register now.</span>
-        <br />
-        <span className="register-link" style={{ cursor: 'pointer' }} onClick={() => navigate('/register')}>Register</span>
+        </button>
+        <span className="register-link" style={{ cursor: 'pointer' }} onClick={handleRegisterClick}>Register</span>
       </div>
     </div>
   );

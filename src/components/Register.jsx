@@ -92,6 +92,15 @@ const Register = () => {
     }
   };
 
+  const handleLoginClick = () => {
+    try {
+      navigate('/login');
+    } catch (error) {
+      console.error('Navigation error:', error);
+      alert('Navigation failed. Please try again.');
+    }
+  };
+
   return (
     <div className="login-container">
       <div className="login-logo">P</div>
@@ -128,7 +137,7 @@ const Register = () => {
         <span
           className="register-link"
           style={{ cursor: 'pointer' }}
-          onClick={() => navigate('/login')}
+          onClick={handleLoginClick}
         >
           Log in
         </span>

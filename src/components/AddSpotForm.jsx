@@ -1795,6 +1795,24 @@ const AddSpotForm = () => {
     return names[num - 1] || `${num}th`;
   };
 
+  const handleMySpotsClick = () => {
+    try {
+      navigate('/my-spots');
+    } catch (error) {
+      console.error('Navigation error:', error);
+      alert('Navigation failed. Please try again.');
+    }
+  };
+
+  const handleDuplicateRemoverClick = () => {
+    try {
+      navigate('/duplicate-remover');
+    } catch (error) {
+      console.error('Navigation error:', error);
+      alert('Navigation failed. Please try again.');
+    }
+  };
+
   return (
     <div style={{ 
       minHeight: '100vh',
@@ -2220,651 +2238,69 @@ const AddSpotForm = () => {
 
             <div style={{ display: 'flex', gap: '16px', marginTop: '20px' }}>
               <button 
-                type="button"
-                onClick={() => navigate('/my-spots')}
-                style={{ 
-                  flex: 1,
-                  background: 'rgba(255, 255, 255, 0.1)', 
-                  color: '#ffffff', 
-                  border: '1px solid rgba(255, 255, 255, 0.2)', 
-                  borderRadius: '12px', 
-                  padding: '16px', 
-                  fontWeight: '600', 
-                  fontSize: '1rem',
+                onClick={handleMySpotsClick}
+                style={{
+                  background: '#ffd740',
+                  color: '#23201d',
+                  border: 'none',
+                  borderRadius: 8,
+                  padding: '12px 24px',
+                  fontWeight: 600,
                   cursor: 'pointer',
-                  transition: 'all 0.3s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.target.background = 'rgba(255, 255, 255, 0.15)';
-                  e.target.transform = 'translateY(-2px)';
-                }}
-                onMouseLeave={(e) => {
-                  e.target.background = 'rgba(255, 255, 255, 0.1)';
-                  e.target.transform = 'translateY(0)';
+                  fontSize: 16
                 }}
               >
-                ← Back to Map
+                Go to My Spots
               </button>
-              
+
               <button 
-                type="submit" 
-                disabled={loading}
-                style={{ 
-                  flex: 2,
-                  background: 'linear-gradient(135deg, #ffd740, #ffe082)', 
-                  color: '#23201d', 
-                  border: 'none', 
-                  borderRadius: '12px', 
-                  padding: '16px', 
-                  fontWeight: '700', 
-                  fontSize: '1rem',
-                  cursor: loading ? 'not-allowed' : 'pointer',
-                  opacity: loading ? 0.7 : 1,
-                  boxShadow: '0 4px 16px rgba(255, 215, 64, 0.3)',
-                  transition: 'all 0.3s ease'
-                }}
-                onMouseEnter={(e) => {
-                  if (!loading) {
-                    e.target.transform = 'translateY(-2px)';
-                    e.target.boxShadow = '0 6px 20px rgba(255, 215, 64, 0.4)';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  e.target.transform = 'translateY(0)';
-                  e.target.boxShadow = '0 4px 16px rgba(255, 215, 64, 0.3)';
+                onClick={handleDuplicateRemoverClick}
+                style={{
+                  background: '#ffd740',
+                  color: '#23201d',
+                  border: 'none',
+                  borderRadius: 8,
+                  padding: '12px 24px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  fontSize: 16,
+                  marginLeft: 16
                 }}
               >
-                {loading ? ' Adding...' : 'Add Parking Spot'}
+                Duplicate Remover
               </button>
             </div>
 
-            {/* Quick Add Sample Spots Button */}
-            <div style={{ 
-              textAlign: 'center', 
-              marginTop: '20px',
-              padding: '20px',
-              background: 'rgba(255, 255, 255, 0.03)',
-              borderRadius: '12px',
-              border: '1px solid rgba(255, 255, 255, 0.1)'
-            }}>
-              <p style={{
-                color: 'rgba(255, 255, 255, 0.7)',
-                fontSize: '0.9rem',
-                margin: '0 0 12px 0'
-              }}>
-                Need some parking spots to test with?
-              </p>
-              <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
-                <button 
-                  type="button"
-                  onClick={addSampleSpots}
-                  disabled={loading}
-                  style={{ 
-                    background: 'linear-gradient(135deg, #4caf50, #66bb6a)', 
-                    color: '#ffffff', 
-                    border: 'none', 
-                    borderRadius: '8px', 
-                    padding: '12px 24px', 
-                    fontWeight: '600', 
-                    fontSize: '0.9rem',
-                    cursor: loading ? 'not-allowed' : 'pointer',
-                    opacity: loading ? 0.7 : 1,
-                    transition: 'all 0.3s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!loading) {
-                      e.target.transform = 'translateY(-1px)';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.transform = 'translateY(0)';
-                  }}
-                >
-                   Add Sample Spots (5 locations)
-                </button>
-                
-                <button 
-                  type="button"
-                  onClick={addHarareParkingSpots}
-                  disabled={loading}
-                  style={{ 
-                    background: 'linear-gradient(135deg, #2196f3, #42a5f5)', 
-                    color: '#ffffff', 
-                    border: 'none', 
-                    borderRadius: '8px', 
-                    padding: '12px 24px', 
-                    fontWeight: '600', 
-                    fontSize: '0.9rem',
-                    cursor: loading ? 'not-allowed' : 'pointer',
-                    opacity: loading ? 0.7 : 1,
-                    transition: 'all 0.3s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!loading) {
-                      e.target.transform = 'translateY(-1px)';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.transform = 'translateY(0)';
-                  }}
-                >
-                  📍 Add Comprehensive Harare Spots (20+ locations)
-                </button>
-                
-                <button 
-                  type="button"
-                  onClick={addMoreHarareSpots}
-                  disabled={loading}
-                  style={{ 
-                    background: 'linear-gradient(135deg, #8e24aa, #d1c4e9)', 
-                    color: '#ffffff', 
-                    border: 'none', 
-                    borderRadius: '8px', 
-                    padding: '12px 24px', 
-                    fontWeight: '600', 
-                    fontSize: '0.9rem',
-                    cursor: loading ? 'not-allowed' : 'pointer',
-                    opacity: loading ? 0.7 : 1,
-                    transition: 'all 0.3s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!loading) {
-                      e.target.transform = 'translateY(-1px)';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.transform = 'translateY(0)';
-                  }}
-                >
-                   Add Even More Harare Spots (20+ new locations)
-                </button>
-                
-
-                
-                <button 
-                  type="button"
-                  onClick={addAllHarareSpots}
-                  disabled={loading}
-                  style={{ 
-                    background: 'linear-gradient(135deg, #4caf50, #66bb6a)', 
-                    color: '#ffffff', 
-                    border: 'none', 
-                    borderRadius: '8px', 
-                    padding: '12px 24px', 
-                    fontWeight: '600', 
-                    fontSize: '0.9rem',
-                    cursor: loading ? 'not-allowed' : 'pointer',
-                    opacity: loading ? 0.7 : 1,
-                    transition: 'all 0.3s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!loading) {
-                      e.target.transform = 'translateY(-1px)';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.transform = 'translateY(0)';
-                  }}
-                >
-                   Add ALL Harare Spots (6000+)
-                </button>
-                
-                                <button 
-                  type="button"
-                  onClick={testFirebaseConnection}
-                  disabled={loading}
-                  style={{ 
-                    background: 'linear-gradient(135deg, #ff9800, #ffb74d)', 
-                    color: '#ffffff', 
-                    border: 'none', 
-                    borderRadius: '8px', 
-                    padding: '12px 24px', 
-                    fontWeight: '600', 
-                    fontSize: '0.9rem', 
-                    cursor: loading ? 'not-allowed' : 'pointer', 
-                    opacity: loading ? 0.7 : 1, 
-                    transition: 'all 0.3s ease' 
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!loading) {
-                      e.target.transform = 'translateY(-1px)';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.transform = 'translateY(0)';
-                  }}
-                >
-                   Test Connection
-                </button>
-
-                <button 
-                  type="button"
-                  onClick={() => navigate('/duplicate-remover')}
-                  disabled={loading}
-                  style={{ 
-                    background: 'linear-gradient(135deg, #9c27b0, #ba68c8)', 
-                    color: '#ffffff', 
-                    border: 'none', 
-                    borderRadius: '8px', 
-                    padding: '12px 24px', 
-                    fontWeight: '600', 
-                    fontSize: '0.9rem', 
-                    cursor: loading ? 'not-allowed' : 'pointer', 
-                    opacity: loading ? 0.7 : 1, 
-                    transition: 'all 0.3s ease' 
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!loading) {
-                      e.target.transform = 'translateY(-1px)';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.transform = 'translateY(0)';
-                  }}
-                >
-                   🧹 Duplicate Remover Tool
-                </button>
-
-
-
-
-
-                <button 
-                  type="button"
-                  onClick={addCBDZone1Spots}
-                  disabled={loading}
-                  style={{ 
-                    background: 'linear-gradient(135deg, #2196f3, #42a5f5)', 
-                    color: '#ffffff', 
-                    border: 'none', 
-                    borderRadius: '8px', 
-                    padding: '12px 24px', 
-                    fontWeight: '600', 
-                    fontSize: '0.9rem',
-                    cursor: loading ? 'not-allowed' : 'pointer',
-                    opacity: loading ? 0.7 : 1,
-                    transition: 'all 0.3s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!loading) {
-                      e.target.transform = 'translateY(-1px)';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.transform = 'translateY(0)';
-                  }}
-                >
-                   Add CBD Zone 1 Spots (200 spots)
-                </button>
-
-                <button 
-                  type="button"
-                  onClick={addCBDZone2Spots}
-                  disabled={loading}
-                  style={{ 
-                    background: 'linear-gradient(135deg, #2196f3, #42a5f5)', 
-                    color: '#ffffff', 
-                    border: 'none', 
-                    borderRadius: '8px', 
-                    padding: '12px 24px', 
-                    fontWeight: '600', 
-                    fontSize: '0.9rem',
-                    cursor: loading ? 'not-allowed' : 'pointer',
-                    opacity: loading ? 0.7 : 1,
-                    transition: 'all 0.3s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!loading) {
-                      e.target.transform = 'translateY(-1px)';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.transform = 'translateY(0)';
-                  }}
-                >
-                   Add CBD Zone 2 Spots (200 spots)
-                </button>
-
-                <button 
-                  type="button"
-                  onClick={addNorthernSuburbsSpots}
-                  disabled={loading}
-                  style={{ 
-                    background: 'linear-gradient(135deg, #4caf50, #66bb6a)', 
-                    color: '#ffffff', 
-                    border: 'none', 
-                    borderRadius: '8px', 
-                    padding: '12px 24px', 
-                    fontWeight: '600', 
-                    fontSize: '0.9rem',
-                    cursor: loading ? 'not-allowed' : 'pointer',
-                    opacity: loading ? 0.7 : 1,
-                    transition: 'all 0.3s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!loading) {
-                      e.target.transform = 'translateY(-1px)';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.transform = 'translateY(0)';
-                  }}
-                >
-                   Add Northern Suburbs Spots (300 spots)
-                </button>
-
-                <button 
-                  type="button"
-                  onClick={addEasternSuburbsSpots}
-                  disabled={loading}
-                  style={{ 
-                    background: 'linear-gradient(135deg, #4caf50, #66bb6a)', 
-                    color: '#ffffff', 
-                    border: 'none', 
-                    borderRadius: '8px', 
-                    padding: '12px 24px', 
-                    fontWeight: '600', 
-                    fontSize: '0.9rem',
-                    cursor: loading ? 'not-allowed' : 'pointer',
-                    opacity: loading ? 0.7 : 1,
-                    transition: 'all 0.3s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!loading) {
-                      e.target.transform = 'translateY(-1px)';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.transform = 'translateY(0)';
-                  }}
-                >
-                   Add Eastern Suburbs Spots (240 spots)
-                </button>
-
-                <button 
-                  type="button"
-                  onClick={addWesternSuburbsSpots}
-                  disabled={loading}
-                  style={{ 
-                    background: 'linear-gradient(135deg, #4caf50, #66bb6a)', 
-                    color: '#ffffff', 
-                    border: 'none', 
-                    borderRadius: '8px', 
-                    padding: '12px 24px', 
-                    fontWeight: '600', 
-                    fontSize: '0.9rem',
-                    cursor: loading ? 'not-allowed' : 'pointer',
-                    opacity: loading ? 0.7 : 1,
-                    transition: 'all 0.3s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!loading) {
-                      e.target.transform = 'translateY(-1px)';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.transform = 'translateY(0)';
-                  }}
-                >
-                   Add Western Suburbs Spots (240 spots)
-                </button>
-
-                <button 
-                  type="button"
-                  onClick={addSouthernSuburbsSpots}
-                  disabled={loading}
-                  style={{ 
-                    background: 'linear-gradient(135deg, #4caf50, #66bb6a)', 
-                    color: '#ffffff', 
-                    border: 'none', 
-                    borderRadius: '8px', 
-                    padding: '12px 24px', 
-                    fontWeight: '600', 
-                    fontSize: '0.9rem',
-                    cursor: loading ? 'not-allowed' : 'pointer',
-                    opacity: loading ? 0.7 : 1,
-                    transition: 'all 0.3s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!loading) {
-                      e.target.transform = 'translateY(-1px)';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.transform = 'translateY(0)';
-                  }}
-                >
-                   Add Southern Suburbs Spots (300 spots)
-                </button>
-
-                <button 
-                  type="button"
-                  onClick={addShoppingCentersSpots}
-                  disabled={loading}
-                  style={{ 
-                    background: 'linear-gradient(135deg, #ff5722, #ff7043)', 
-                    color: '#ffffff', 
-                    border: 'none', 
-                    borderRadius: '8px', 
-                    padding: '12px 24px', 
-                    fontWeight: '600', 
-                    fontSize: '0.9rem',
-                    cursor: loading ? 'not-allowed' : 'pointer',
-                    opacity: loading ? 0.7 : 1,
-                    transition: 'all 0.3s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!loading) {
-                      e.target.transform = 'translateY(-1px)';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.transform = 'translateY(0)';
-                  }}
-                >
-                   Add Shopping Centers Spots (900 spots)
-                </button>
-
-                <button 
-                  type="button"
-                  onClick={addMedicalCentersSpots}
-                  disabled={loading}
-                  style={{ 
-                    background: 'linear-gradient(135deg, #e91e63, #ec407a)', 
-                    color: '#ffffff', 
-                    border: 'none', 
-                    borderRadius: '8px', 
-                    padding: '12px 24px', 
-                    fontWeight: '600', 
-                    fontSize: '0.9rem',
-                    cursor: loading ? 'not-allowed' : 'pointer',
-                    opacity: loading ? 0.7 : 1,
-                    transition: 'all 0.3s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!loading) {
-                      e.target.transform = 'translateY(-1px)';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.transform = 'translateY(0)';
-                  }}
-                >
-                   Add Medical Centers Spots (255 spots)
-                </button>
-
-                <button 
-                  type="button"
-                  onClick={addUniversitiesSpots}
-                  disabled={loading}
-                  style={{ 
-                    background: 'linear-gradient(135deg, #9c27b0, #ba68c8)', 
-                    color: '#ffffff', 
-                    border: 'none', 
-                    borderRadius: '8px', 
-                    padding: '12px 24px', 
-                    fontWeight: '600', 
-                    fontSize: '0.9rem',
-                    cursor: loading ? 'not-allowed' : 'pointer',
-                    opacity: loading ? 0.7 : 1,
-                    transition: 'all 0.3s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!loading) {
-                      e.target.transform = 'translateY(-1px)';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.transform = 'translateY(0)';
-                  }}
-                >
-                   Add Universities Spots (2000 spots)
-                </button>
-
-                <button 
-                  type="button"
-                  onClick={addTransportHubsSpots}
-                  disabled={loading}
-                  style={{ 
-                    background: 'linear-gradient(135deg, #607d8b, #78909c)', 
-                    color: '#ffffff', 
-                    border: 'none', 
-                    borderRadius: '8px', 
-                    padding: '12px 24px', 
-                    fontWeight: '600', 
-                    fontSize: '0.9rem',
-                    cursor: loading ? 'not-allowed' : 'pointer',
-                    opacity: loading ? 0.7 : 1,
-                    transition: 'all 0.3s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!loading) {
-                      e.target.transform = 'translateY(-1px)';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.transform = 'translateY(0)';
-                  }}
-                >
-                   Add Transport Hubs Spots (425 spots)
-                </button>
-
-                <button 
-                  type="button"
-                  onClick={addGovernmentOfficesSpots}
-                  disabled={loading}
-                  style={{ 
-                    background: 'linear-gradient(135deg, #795548, #8d6e63)', 
-                    color: '#ffffff', 
-                    border: 'none', 
-                    borderRadius: '8px', 
-                    padding: '12px 24px', 
-                    fontWeight: '600', 
-                    fontSize: '0.9rem',
-                    cursor: loading ? 'not-allowed' : 'pointer',
-                    opacity: loading ? 0.7 : 1,
-                    transition: 'all 0.3s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!loading) {
-                      e.target.transform = 'translateY(-1px)';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.transform = 'translateY(0)';
-                  }}
-                >
-                   Add Government Offices Spots (360 spots)
-                </button>
-
-                <button 
-                  type="button"
-                  onClick={addHotelsSpots}
-                  disabled={loading}
-                  style={{ 
-                    background: 'linear-gradient(135deg, #ff9800, #ffb74d)', 
-                    color: '#ffffff', 
-                    border: 'none', 
-                    borderRadius: '8px', 
-                    padding: '12px 24px', 
-                    fontWeight: '600', 
-                    fontSize: '0.9rem',
-                    cursor: loading ? 'not-allowed' : 'pointer',
-                    opacity: loading ? 0.7 : 1,
-                    transition: 'all 0.3s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!loading) {
-                      e.target.transform = 'translateY(-1px)';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.transform = 'translateY(0)';
-                  }}
-                >
-                   Add Hotels Spots (1575 spots)
-                </button>
-
-                <button 
-                  type="button"
-                  onClick={addEntertainmentSpots}
-                  disabled={loading}
-                  style={{ 
-                    background: 'linear-gradient(135deg, #f44336, #e57373)', 
-                    color: '#ffffff', 
-                    border: 'none', 
-                    borderRadius: '8px', 
-                    padding: '12px 24px', 
-                    fontWeight: '600', 
-                    fontSize: '0.9rem',
-                    cursor: loading ? 'not-allowed' : 'pointer',
-                    opacity: loading ? 0.7 : 1,
-                    transition: 'all 0.3s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!loading) {
-                      e.target.transform = 'translateY(-1px)';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.transform = 'translateY(0)';
-                  }}
-                >
-                   Add Entertainment Spots (630 spots)
-                </button>
-
-                <button 
-                  type="button"
-                  onClick={addAllHarareSpots}
-                  disabled={loading}
-                  style={{ 
-                    background: 'linear-gradient(135deg, #ff0000, #ff4444)', 
-                    color: '#ffffff', 
-                    border: 'none', 
-                    borderRadius: '8px', 
-                    padding: '16px 32px', 
-                    fontWeight: '700', 
-                    fontSize: '1.1rem',
-                    cursor: loading ? 'not-allowed' : 'pointer',
-                    opacity: loading ? 0.7 : 1,
-                    transition: 'all 0.3s ease',
-                    boxShadow: '0 4px 15px rgba(255, 0, 0, 0.3)'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!loading) {
-                      e.target.transform = 'translateY(-2px)';
-                      e.target.boxShadow = '0 6px 20px rgba(255, 0, 0, 0.4)';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.transform = 'translateY(0)';
-                    e.target.boxShadow = '0 4px 15px rgba(255, 0, 0, 0.3)';
-                  }}
-                >
-                   🚀 ADD ALL HARARE SPOTS (6000+ spots) 🚀
-                </button>
-              </div>
-            </div>
+            <button 
+              type="submit" 
+              disabled={loading}
+              style={{ 
+                flex: 2,
+                background: 'linear-gradient(135deg, #ffd740, #ffe082)', 
+                color: '#23201d', 
+                border: 'none', 
+                borderRadius: '12px', 
+                padding: '16px', 
+                fontWeight: '700', 
+                fontSize: '1rem',
+                cursor: loading ? 'not-allowed' : 'pointer',
+                opacity: loading ? 0.7 : 1,
+                boxShadow: '0 4px 16px rgba(255, 215, 64, 0.3)',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                if (!loading) {
+                  e.target.transform = 'translateY(-2px)';
+                  e.target.boxShadow = '0 6px 20px rgba(255, 215, 64, 0.4)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                e.target.transform = 'translateY(0)';
+                e.target.boxShadow = '0 4px 16px rgba(255, 215, 64, 0.3)';
+              }}
+            >
+              {loading ? ' Adding...' : 'Add Parking Spot'}
+            </button>
           </form>
         </div>
       </div>

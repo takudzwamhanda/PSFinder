@@ -53,6 +53,15 @@ const ForgotPassword = () => {
     }
   };
 
+  const handleBackToLogin = () => {
+    try {
+      navigate('/login');
+    } catch (error) {
+      console.error('Navigation error:', error);
+      alert('Navigation failed. Please try again.');
+    }
+  };
+
   return (
     <div className="forgot-password-container">
       <div className="forgot-password-logo">P</div>
@@ -71,9 +80,19 @@ const ForgotPassword = () => {
           className="forgot-password-input login-input"
           required
         />
-        <button className="forgot-password-btn login-btn" type="submit" disabled={loading}>
-          {loading ? "Sending..." : "Send Reset Email"}
+        <button type="submit" className="forgot-password-btn">
+          {loading ? 'Sending...' : 'Send Reset Link'}
         </button>
+        
+        <div className="forgot-password-back">
+          <button 
+            type="button"
+            className="back-to-login-btn" 
+            onClick={handleBackToLogin}
+          >
+            Back to Login
+          </button>
+        </div>
         {message && (
           <div className="success-message">
             {message}
@@ -85,17 +104,6 @@ const ForgotPassword = () => {
           </div>
         )}
       </form>
-      <div className="login-register" style={{ marginTop: 20 }}>
-        <span>Remember your password?</span>
-        <br />
-        <span 
-          className="register-link"
-          style={{ cursor: 'pointer' }}
-          onClick={() => navigate('/login')}
-        >
-          Back to Login
-        </span>
-      </div>
     </div>
   );
 };

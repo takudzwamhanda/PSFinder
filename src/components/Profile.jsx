@@ -76,11 +76,22 @@ const Profile = () => {
     setSaving(false);
   };
 
+  const handleLoginClick = () => {
+    try {
+      navigate('/login');
+    } catch (error) {
+      console.error('Navigation error:', error);
+      alert('Navigation failed. Please try again.');
+    }
+  };
+
   if (loading && !timeoutReached) return <div style={{ textAlign: 'center', marginTop: 40 }}>Loading profile...</div>;
   if (timeoutReached && !user) return (
     <div style={{ textAlign: 'center', marginTop: 40 }}>
       Unable to load profile. You may not be logged in.<br />
-      <button onClick={() => navigate('/login')} style={{ marginTop: 16, background: '#ffd740', color: '#23201d', border: 'none', borderRadius: 6, padding: '8px 24px', fontWeight: 600, fontSize: 16 }}>Go to Login</button>
+      <button onClick={handleLoginClick} style={{ marginTop: 16, background: '#ffd740', color: '#23201d', border: 'none', borderRadius: 6, padding: '8px 24px', fontWeight: 600, fontSize: 16 }}>
+        Go to Login
+      </button>
     </div>
   );
   if (!user) return <div style={{ textAlign: 'center', marginTop: 40 }}>You are not logged in.</div>;
