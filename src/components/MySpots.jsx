@@ -495,8 +495,10 @@ const MySpots = () => {
   };
 
   const handleViewModeToggle = () => {
+    console.log('View mode toggle clicked!');
     try {
       setViewMode(viewMode === 'map' ? 'list' : 'map');
+      console.log('View mode changed to:', viewMode === 'map' ? 'list' : 'map');
     } catch (error) {
       console.error('View mode toggle error:', error);
       alert('Failed to switch view mode. Please try again.');
@@ -504,11 +506,13 @@ const MySpots = () => {
   };
 
   const handleRefresh = () => {
+    console.log('Refresh button clicked!');
     try {
       setLastFetchTime(null);
       setError(null);
       // Force a fresh fetch of spots
       fetchSpotsWithAvailability();
+      console.log('Refresh completed');
     } catch (error) {
       console.error('Refresh error:', error);
       alert('Failed to refresh data. Please try again.');
@@ -516,6 +520,7 @@ const MySpots = () => {
   };
 
   const handleSearch = (e) => {
+    console.log('Search button clicked!');
     e.preventDefault();
     try {
       // The search is already handled by the filteredSpots logic
@@ -537,88 +542,100 @@ const MySpots = () => {
           </div>
           <div className="header-actions">
             <button 
-              className="filter-btn"
+              type="button"
               onClick={handleViewModeToggle}
               style={{
-                padding: '10px 16px',
-                fontSize: '0.9rem',
+                padding: '12px 20px',
+                fontSize: '14px',
                 fontWeight: '600',
-                borderRadius: '8px',
+                borderRadius: '10px',
                 cursor: 'pointer',
                 transition: 'all 0.3s ease',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '6px',
+                gap: '8px',
                 background: 'linear-gradient(135deg, #ffd740, #ffe082)',
                 color: '#23201d',
                 border: 'none',
-                boxShadow: '0 2px 8px rgba(255, 215, 64, 0.3)'
+                boxShadow: '0 4px 12px rgba(255, 215, 64, 0.3)',
+                position: 'relative',
+                zIndex: 10,
+                minWidth: '120px',
+                justifyContent: 'center'
               }}
               onMouseEnter={(e) => {
-                e.target.style.transform = 'translateY(-1px)';
-                e.target.style.boxShadow = '0 4px 12px rgba(255, 215, 64, 0.4)';
+                e.target.style.transform = 'translateY(-2px)';
+                e.target.style.boxShadow = '0 6px 16px rgba(255, 215, 64, 0.4)';
               }}
               onMouseLeave={(e) => {
                 e.target.style.transform = 'translateY(0)';
-                e.target.style.boxShadow = '0 2px 8px rgba(255, 215, 64, 0.3)';
+                e.target.style.boxShadow = '0 4px 12px rgba(255, 215, 64, 0.3)';
               }}
             >
               {viewMode === 'map' ? '📋 List View' : '🗺️ Map View'}
             </button>
             <button 
-              className="refresh-btn"
+              type="button"
               onClick={handleRefresh}
               style={{
-                padding: '10px 16px',
-                fontSize: '0.9rem',
+                padding: '12px 20px',
+                fontSize: '14px',
                 fontWeight: '600',
-                borderRadius: '8px',
+                borderRadius: '10px',
                 cursor: 'pointer',
                 transition: 'all 0.3s ease',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '6px',
+                gap: '8px',
                 background: 'linear-gradient(135deg, #4caf50, #66bb6a)',
                 color: '#ffffff',
                 border: 'none',
-                boxShadow: '0 2px 8px rgba(76, 175, 80, 0.3)'
+                boxShadow: '0 4px 12px rgba(76, 175, 80, 0.3)',
+                position: 'relative',
+                zIndex: 10,
+                minWidth: '120px',
+                justifyContent: 'center'
               }}
               onMouseEnter={(e) => {
-                e.target.style.transform = 'translateY(-1px)';
-                e.target.style.boxShadow = '0 4px 12px rgba(76, 175, 80, 0.4)';
+                e.target.style.transform = 'translateY(-2px)';
+                e.target.style.boxShadow = '0 6px 16px rgba(76, 175, 80, 0.4)';
               }}
               onMouseLeave={(e) => {
                 e.target.style.transform = 'translateY(0)';
-                e.target.style.boxShadow = '0 2px 8px rgba(76, 175, 80, 0.3)';
+                e.target.style.boxShadow = '0 4px 12px rgba(76, 175, 80, 0.3)';
               }}
             >
               🔄 Refresh
             </button>
             <button 
-              className="logout-btn"
+              type="button"
               onClick={handleHomeClick}
               style={{
-                padding: '10px 16px',
-                fontSize: '0.9rem',
+                padding: '12px 20px',
+                fontSize: '14px',
                 fontWeight: '600',
-                borderRadius: '8px',
+                borderRadius: '10px',
                 cursor: 'pointer',
                 transition: 'all 0.3s ease',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '6px',
+                gap: '8px',
                 background: 'linear-gradient(135deg, #f44336, #e57373)',
                 color: '#ffffff',
                 border: 'none',
-                boxShadow: '0 2px 8px rgba(244, 67, 54, 0.3)'
+                boxShadow: '0 4px 12px rgba(244, 67, 54, 0.3)',
+                position: 'relative',
+                zIndex: 10,
+                minWidth: '120px',
+                justifyContent: 'center'
               }}
               onMouseEnter={(e) => {
-                e.target.style.transform = 'translateY(-1px)';
-                e.target.style.boxShadow = '0 4px 12px rgba(244, 67, 54, 0.4)';
+                e.target.style.transform = 'translateY(-2px)';
+                e.target.style.boxShadow = '0 6px 16px rgba(244, 67, 54, 0.4)';
               }}
               onMouseLeave={(e) => {
                 e.target.style.transform = 'translateY(0)';
-                e.target.style.boxShadow = '0 2px 8px rgba(244, 67, 54, 0.3)';
+                e.target.style.boxShadow = '0 4px 12px rgba(244, 67, 54, 0.3)';
               }}
             >
               🚪 Sign Out
@@ -644,26 +661,33 @@ const MySpots = () => {
               }}
             />
             <button 
-              className="search-btn"
+              type="button"
               onClick={handleSearch}
               style={{
                 background: 'linear-gradient(135deg, #ffd740, #ffe082)',
                 color: '#23201d',
                 border: 'none',
-                borderRadius: '8px',
+                borderRadius: '10px',
                 padding: '12px 20px',
                 fontWeight: '600',
                 cursor: 'pointer',
                 transition: 'all 0.3s ease',
-                boxShadow: '0 2px 8px rgba(255, 215, 64, 0.3)'
+                boxShadow: '0 4px 12px rgba(255, 215, 64, 0.3)',
+                position: 'relative',
+                zIndex: 10,
+                minWidth: '100px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '6px'
               }}
               onMouseEnter={(e) => {
-                e.target.style.transform = 'translateY(-1px)';
-                e.target.style.boxShadow = '0 4px 12px rgba(255, 215, 64, 0.4)';
+                e.target.style.transform = 'translateY(-2px)';
+                e.target.style.boxShadow = '0 6px 16px rgba(255, 215, 64, 0.4)';
               }}
               onMouseLeave={(e) => {
                 e.target.style.transform = 'translateY(0)';
-                e.target.style.boxShadow = '0 2px 8px rgba(255, 215, 64, 0.3)';
+                e.target.style.boxShadow = '0 4px 12px rgba(255, 215, 64, 0.3)';
               }}
             >
               🔍 Search
