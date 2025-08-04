@@ -62,7 +62,8 @@ const MyBookings = () => {
   const paymentSuccess = params.get('success') === '1';
   
   // Get user from AuthContext
-  const { user } = useContext(AuthContext);
+  const authContext = useContext(AuthContext);
+const user = authContext?.user;
 
   useEffect(() => {
     const getUserName = async (user) => {
@@ -340,10 +341,18 @@ const MyBookings = () => {
       // Use real-time user location as origin
       const url = `https://www.google.com/maps/dir/?api=1&origin=${userLocation.lat},${userLocation.lng}&destination=${lat},${lng}`;
       window.open(url, '_blank');
+      
+      // Provide feedback about location accuracy
+      if (userLocation.accuracy > 100) {
+        alert(`Directions opened! Note: Your location accuracy is ${userLocation.accuracy} meters. For more precise directions, try refreshing your location from an open area.`);
+      } else {
+        alert('Directions opened with your current location!');
+      }
     } else {
       // Fallback to destination-only if user location not available
       const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
       window.open(url, '_blank');
+      alert('Directions opened! Since your location is not available, you may need to set your starting point manually in Google Maps.');
     }
   };
 
@@ -918,7 +927,7 @@ const MyBookings = () => {
                           e.target.style.boxShadow = '0 6px 20px rgba(33, 150, 243, 0.3)';
                         }}
                         onClick={() => handleDirections(parkingSpots[b.spotId].lat, parkingSpots[b.spotId].lng)}>
-                          🗺️ Get Directions
+                          Get Directions
                         </button>
                       )}
                     </div>

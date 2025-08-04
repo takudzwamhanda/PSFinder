@@ -28,7 +28,7 @@ html, body {
 .logo-p {
   font-size: 2.2rem;
   font-weight: 700;
-  margin-right: 10px;
+  margin-right: 70px;
   color: #ffd740;
 }
 
@@ -81,7 +81,7 @@ html, body {
   height: 100vh;
   object-fit: cover;
   z-index: 0;
-  filter: brightness(1.15) grayscale(0.1);
+  filter: brightness(1.15) grayscale(0.1) blur(3px);
 }
 
 .hero-video-overlay {

@@ -70,10 +70,18 @@ const ParkingSpotList = ({ spots, searchQuery, priceFilter, availabilityFilter, 
       // Use real-time user location as origin
       const url = `https://www.google.com/maps/dir/?api=1&origin=${userLocation.lat},${userLocation.lng}&destination=${lat},${lng}`;
       window.open(url, '_blank');
+      
+      // Provide feedback about location accuracy
+      if (userLocation.accuracy > 100) {
+        alert(`Directions opened! Note: Your location accuracy is ${userLocation.accuracy} meters. For more precise directions, try refreshing your location from an open area.`);
+      } else {
+        alert('Directions opened with your current location!');
+      }
     } else {
       // Fallback to destination-only if user location not available
       const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
       window.open(url, '_blank');
+      alert('Directions opened! Since your location is not available, you may need to set your starting point manually in Google Maps.');
     }
   };
 
@@ -250,6 +258,8 @@ const MySpots = () => {
   const [availabilityFilter, setAvailabilityFilter] = useState('all');
   const [parkingSpots, setParkingSpots] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [lastFetchTime, setLastFetchTime] = useState(null);
   
   // Booking modal state
   const [bookingSpot, setBookingSpot] = useState(null);
@@ -269,12 +279,8 @@ const MySpots = () => {
   let user = null;
   try {
     const authContext = useContext(AuthContext);
-    console.log('MySpots - AuthContext:', authContext);
     if (authContext && typeof authContext === 'object' && 'user' in authContext) {
       user = authContext.user;
-      console.log('MySpots - User from context:', user);
-    } else {
-      console.log('MySpots - No valid user in context');
     }
   } catch (error) {
     console.warn('AuthContext not available or invalid:', error);
@@ -282,11 +288,21 @@ const MySpots = () => {
   }
 
   useEffect(() => {
-    const fetchSpots = async () => {
+    const fetchSpotsWithAvailability = async () => {
+      // Check if we have recent data (cache for 30 seconds)
+      const now = Date.now();
+      if (lastFetchTime && (now - lastFetchTime) < 30000 && parkingSpots.length > 0) {
+        setLoading(false);
+        return;
+      }
+      
       setLoading(true);
+      setError(null);
+      
       try {
-        const querySnapshot = await getDocs(collection(db, "parkingSpots"));
-        const spots = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        // Fetch all parking spots in one query
+        const spotsQuery = await getDocs(collection(db, "parkingSpots"));
+        const spots = spotsQuery.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         
         // Filter out test spots
         const realSpots = spots.filter(spot => 
@@ -296,71 +312,53 @@ const MySpots = () => {
         );
         
         setParkingSpots(realSpots);
+        
+        // Fetch all active bookings in one query instead of multiple queries
+        const currentTime = new Date();
+        const bookingsQuery = query(
+          collection(db, 'bookings'),
+          where('status', 'in', ['pending', 'confirmed'])
+        );
+        
+        const bookingsSnapshot = await getDocs(bookingsQuery);
+        const availabilityMap = {};
+        
+        // Initialize all spots as available
+        realSpots.forEach(spot => {
+          availabilityMap[spot.id] = true;
+        });
+        
+        // Check which spots are currently occupied
+        bookingsSnapshot.forEach(doc => {
+          const booking = doc.data();
+          const bookingDateTime = new Date(booking.bookingDateTime);
+          const endTime = new Date(bookingDateTime.getTime() + (2 * 60 * 60 * 1000)); // 2 hours duration
+          
+          // If booking is currently active, mark spot as unavailable
+          if (currentTime >= bookingDateTime && currentTime <= endTime) {
+            availabilityMap[booking.spotId] = false;
+          }
+        });
+        
+        setActiveBookings(availabilityMap);
+        setLastFetchTime(now);
       } catch (error) {
         console.error("Error fetching parking spots:", error);
+        setError("Failed to load parking spots. Please try again.");
       }
       setLoading(false);
     };
-    fetchSpots();
-  }, []);
-
-  // Real-time availability checking
-  useEffect(() => {
-    const checkAllSpotsAvailability = async () => {
-      const availabilityMap = {};
-      
-      for (const spot of parkingSpots) {
-        const isAvailable = await checkSpotAvailability(spot.id);
-        availabilityMap[spot.id] = isAvailable;
-      }
-      
-      setActiveBookings(availabilityMap);
-    };
     
-    if (parkingSpots.length > 0) {
-      checkAllSpotsAvailability();
-    }
-  }, [parkingSpots]);
+    fetchSpotsWithAvailability();
+  }, [lastFetchTime, parkingSpots.length]);
 
-  const checkSpotAvailability = async (spotId) => {
-    try {
-      const now = new Date();
-      const bookingsQuery = query(
-        collection(db, 'bookings'),
-        where('spotId', '==', spotId),
-        where('status', 'in', ['pending', 'confirmed'])
-      );
-      
-      const querySnapshot = await getDocs(bookingsQuery);
-      const activeBookings = [];
-      
-      querySnapshot.forEach(doc => {
-        const booking = doc.data();
-        const bookingDateTime = new Date(booking.bookingDateTime);
-        const endTime = new Date(bookingDateTime.getTime() + (2 * 60 * 60 * 1000)); // 2 hours duration
-        
-        // Check if booking is currently active
-        if (now >= bookingDateTime && now <= endTime) {
-          activeBookings.push(booking);
-        }
-      });
-      
-      return activeBookings.length === 0; // Available if no active bookings
-    } catch (error) {
-      console.error('Error checking spot availability:', error);
-      return true; // Assume available if error
-    }
-  };
+  // Remove the separate availability checking useEffect since we now do it in one query
 
   const handleBookSpot = (spot) => {
-    console.log('handleBookSpot called with spot:', spot);
-    console.log('Setting booking spot and opening modal...');
     setBookingSpot(spot);
     setBookingDate("");
     setBookingTime("");
     setShowBookingModal(true);
-    console.log('Booking spot set to:', spot);
-    console.log('Modal should now be visible');
   };
 
   const handleBookingSubmit = async (e) => {
@@ -489,29 +487,52 @@ const MySpots = () => {
 
   return (
     <div className="myspots-root">
-      {/* Modern Header */}
-      <header className="myspots-header">
-        <div className="header-content">
-          <div className="header-left">
-            <span className="myspots-logo">P</span>
-            
-          </div>
-          <div className="header-actions">
-            <button 
-              className="filter-btn"
-              onClick={() => setViewMode(viewMode === 'map' ? 'list' : 'map')}
-            >
-              {viewMode === 'map' ? ' List View' : ' Map View'}
-            </button>
-            <button 
-              className="logout-btn"
-              onClick={() => navigate('/')}
-            >
-              Sign Out
-            </button>
-          </div>
-        </div>
-      </header>
+             {/* Modern Header */}
+       <header className="myspots-header">
+         <div className="header-content">
+                       <div className="header-left">
+              {/* Header content without logo since LogoOnlyNavbar handles it */}
+            </div>
+           <div className="header-actions">
+             <button 
+               className="filter-btn"
+               onClick={() => setViewMode(viewMode === 'map' ? 'list' : 'map')}
+             >
+               {viewMode === 'map' ? ' List View' : ' Map View'}
+             </button>
+             <button 
+               className="refresh-btn"
+               onClick={() => {
+                 setLastFetchTime(null);
+                 setError(null);
+               }}
+               style={{
+                 padding: '10px 16px',
+                 fontSize: '0.9rem',
+                 fontWeight: '600',
+                 border: 'none',
+                 borderRadius: '8px',
+                 cursor: 'pointer',
+                 transition: 'all 0.3s ease',
+                 display: 'flex',
+                 alignItems: 'center',
+                 gap: '6px',
+                 background: 'rgba(76, 175, 80, 0.1)',
+                 color: '#4caf50',
+                 border: '1px solid rgba(76, 175, 80, 0.3)'
+               }}
+             >
+               🔄 Refresh
+             </button>
+             <button 
+               className="logout-btn"
+               onClick={() => navigate('/')}
+             >
+               Sign Out
+             </button>
+           </div>
+         </div>
+       </header>
 
       {/* Search and Filters Section */}
       <section className="search-filters-section">
@@ -583,12 +604,14 @@ const MySpots = () => {
             {loading ? (
               <div style={{
                 display: 'flex',
+                flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
                 height: '100%',
                 color: '#ffd740',
                 fontSize: '1.2rem',
-                fontWeight: '600'
+                fontWeight: '600',
+                gap: '16px'
               }}>
                 <div style={{
                   display: 'inline-block',
@@ -597,10 +620,42 @@ const MySpots = () => {
                   border: '3px solid rgba(255, 215, 64, 0.3)',
                   borderTop: '3px solid #ffd740',
                   borderRadius: '50%',
-                  animation: 'spin 1s linear infinite',
-                  marginRight: '12px'
+                  animation: 'spin 1s linear infinite'
                 }} />
-                Loading parking spots...
+                <div>Loading parking spots...</div>
+                <div style={{ fontSize: '0.9rem', color: '#cccccc' }}>
+                  Optimized loading for faster results
+                </div>
+              </div>
+            ) : error ? (
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '100%',
+                color: '#ff6b6b',
+                fontSize: '1.1rem',
+                gap: '16px'
+              }}>
+                <div>⚠️ {error}</div>
+                <button 
+                  onClick={() => {
+                    setError(null);
+                    setLastFetchTime(null);
+                  }}
+                  style={{
+                    padding: '10px 20px',
+                    backgroundColor: '#ffd740',
+                    color: '#23201d',
+                    border: 'none',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    fontWeight: '600'
+                  }}
+                >
+                  Try Again
+                </button>
               </div>
             ) : viewMode === 'map' ? (
               <LeafletMapView />

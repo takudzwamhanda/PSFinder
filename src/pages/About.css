@@ -198,6 +198,6 @@ body {
   box-shadow: 0 4px 16px rgba(0,0,0,0.10);
 }
 
-body, .about-section, .features-grid, .feature-card {
+body, .about-section, .features-grid {
   font-family: 'Poppins', 'Inter', sans-serif;
 } 

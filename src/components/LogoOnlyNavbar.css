@@ -1,0 +1,54 @@
+.logo-only-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: transparent;
+  z-index: 1000;
+  padding: 12px 20px;
+}
+
+.logo-only-navbar-content {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  max-width: 1200px;
+  margin: 0;
+  padding-left: 20px;
+}
+
+.logo-only-navbar-logo {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffd740;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.logo-only-navbar-logo:hover {
+  transform: scale(1.05);
+  text-shadow: 0 0 10px rgba(255, 215, 64, 0.5);
+  background: rgba(255, 215, 64, 0.1);
+}
+
+@media (max-width: 768px) {
+  .logo-only-navbar {
+    padding: 10px 15px;
+  }
+  
+  .logo-only-navbar-logo {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo-only-navbar {
+    padding: 8px 12px;
+  }
+  
+  .logo-only-navbar-logo {
+    font-size: 1.6rem;
+  }
+} 

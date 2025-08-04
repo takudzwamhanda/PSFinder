@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./Login.css";
 import { useNavigate } from "react-router-dom";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import { auth } from "../firebase";
 
 const Register = () => {
@@ -17,22 +17,73 @@ const Register = () => {
     setLoading(true);
     setError("");
     setSuccess("");
+    
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError("Please enter a valid email address.");
+      setLoading(false);
+      return;
+    }
+    
     if (!password || password.length < 6) {
       setError("Password must be at least 6 characters long.");
       setLoading(false);
       return;
     }
+    
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      setSuccess("Registration successful! Redirecting to login...");
+      // Create user account
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      
+      // Send email verification with better configuration
+      try {
+        await sendEmailVerification(user, {
+          url: window.location.origin + '/login',
+          handleCodeInApp: false
+        });
+      } catch (verificationError) {
+        console.error('Email verification error:', verificationError);
+        // Continue with registration even if verification fails
+        setSuccess(
+          <>
+            Registration successful! Please check your email ({email}) and click the verification link before logging in.
+            <br />
+            <span style={{ fontSize: '14px', opacity: '0.8' }}>
+              If you don't receive the email, check your spam folder or try logging in directly.
+            </span>
+          </>
+        );
+        setTimeout(() => {
+          navigate('/verify-email');
+        }, 2000);
+        return;
+      }
+      
+      setSuccess(
+        <>
+          Registration successful! Please check your email ({email}) and click the verification link before logging in.
+          <br />
+          <span style={{ fontSize: '14px', opacity: '0.8' }}>
+            Didn't receive the email? Check your spam folder.
+          </span>
+        </>
+      );
+      
       setTimeout(() => {
-        navigate('/login');
-      }, 2000);
+        navigate('/verify-email');
+      }, 5000);
+      
     } catch (err) {
       if (err.code === 'auth/email-already-in-use') {
         setError(
           <>This email is already registered. <span className="register-link" style={{ cursor: 'pointer', textDecoration: 'underline' }} onClick={() => navigate('/login')}>Log in?</span></>
         );
+      } else if (err.code === 'auth/invalid-email') {
+        setError("Please enter a valid email address.");
+      } else if (err.code === 'auth/weak-password') {
+        setError("Password is too weak. Please choose a stronger password.");
       } else {
         setError(err.message || "Registration failed.");
       }

@@ -21,8 +21,15 @@ const LandingPage2 = () => {
         <div className="how-to-use-container">
           <h2 className="how-to-use-title">How to Use Our Parking App</h2>
           <p className="how-to-use-subtitle">
-            Follow these simple steps to find and reserve your perfect parking spot
+            Follow these simple steps to find and reserve your perfect parking spot, or click the "Get Started" button below to begin immediately
           </p>
+          
+          {/* Get Started Button - Moved to top for immediate access */}
+          <div className="how-to-use-cta">
+            <button className="how-to-use-btn" onClick={() => navigate('/my-spots')}>
+              Get Started Now
+            </button>
+          </div>
           
           <div className="how-to-use-steps">
             <div className="step-card">
@@ -98,11 +105,54 @@ const LandingPage2 = () => {
             </div>
           </div>
 
-          <div className="how-to-use-cta">
-            <button className="how-to-use-btn" onClick={() => navigate('/my-spots')}>
-              Get Started Now
-            </button>
+          {/* Feature Cards Section */}
+          <div className="feature-cards-section">
+            <div className="feature-cards-grid">
+              <div className="feature-card" onClick={() => navigate('/my-spots')}>
+                <h4>Find Parking Spots</h4>
+                <p>Browse available parking spots on our interactive map with real-time availability</p>
+                <div className="feature-card-arrow">→</div>
+              </div>
+
+              <div className="feature-card" onClick={() => navigate('/my-bookings')}>
+                <h4>My Bookings</h4>
+                <p>Manage your current and past reservations, view booking history and status</p>
+                <div className="feature-card-arrow">→</div>
+              </div>
+
+              <div className="feature-card" onClick={() => navigate('/payments')}>
+                <h4>Payment History</h4>
+                <p>View your payment history, receipts, and manage your payment methods</p>
+                <div className="feature-card-arrow">→</div>
+              </div>
+
+              <div className="feature-card" onClick={() => navigate('/reviews')}>
+                <h4>Reviews & Comments</h4>
+                <p>Read user reviews, share your experience, and join the community discussion</p>
+                <div className="feature-card-arrow">→</div>
+              </div>
+
+              <div className="feature-card" onClick={() => navigate('/profile')}>
+                <h4>Profile Settings</h4>
+                <p>Update your personal information, preferences, and account settings</p>
+                <div className="feature-card-arrow">→</div>
+              </div>
+
+              <div className="feature-card" onClick={() => navigate('/about')}>
+                <h4>About Us</h4>
+                <p>Learn more about our mission, team, and how we're revolutionizing parking</p>
+                <div className="feature-card-arrow">→</div>
+              </div>
+
+              <div className="feature-card" onClick={() => navigate('/owner-dashboard')}>
+                <h4>Owner Dashboard</h4>
+                <p>For parking spot owners - manage your listings, view earnings, and analytics</p>
+                <div className="feature-card-arrow">→</div>
+              </div>
+            </div>
           </div>
+
+          {/* Remove the duplicate Get Started button from bottom */}
         </div>
       </section>
       

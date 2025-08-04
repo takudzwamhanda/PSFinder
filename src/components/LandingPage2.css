@@ -48,7 +48,7 @@
   color: #ffd740;
   position: absolute;
   top: 20px;
-  left: 30px;
+  left: 15px;
   z-index: 3;
 }
 
@@ -87,11 +87,10 @@
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
-  padding: 80px 20px 20px 20px;
+  padding: 100px 20px 20px 20px;
   height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   overflow-y: auto;
 }
 
@@ -102,6 +101,7 @@
   text-align: center;
   margin-bottom: 15px;
   letter-spacing: 0.5px;
+  margin-top: 20px;
 }
 
 .how-to-use-subtitle {
@@ -172,9 +172,121 @@
   margin: 0;
 }
 
+/* Feature Cards Section Styles */
+.feature-cards-section {
+  margin-bottom: 20px;
+  margin-top: -20px;
+}
+
+.feature-cards-title {
+  display: none;
+}
+
+.feature-cards-subtitle {
+  display: none;
+}
+
+.feature-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 30px;
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 8px;
+  scrollbar-width: thin;
+  scrollbar-color: #ffd740 #232323;
+}
+
+.feature-cards-grid::-webkit-scrollbar {
+  width: 8px;
+}
+
+.feature-cards-grid::-webkit-scrollbar-track {
+  background: #232323;
+  border-radius: 4px;
+}
+
+.feature-cards-grid::-webkit-scrollbar-thumb {
+  background: #ffd740;
+  border-radius: 4px;
+}
+
+.feature-cards-grid::-webkit-scrollbar-thumb:hover {
+  background: #ffb74d;
+}
+
+.feature-card {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding: 15px;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 140px;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 215, 64, 0.6);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 215, 64, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.feature-card:hover::before {
+  left: 100%;
+}
+
+.feature-card h4 {
+  color: #ffd740;
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+  letter-spacing: 0.5px;
+}
+
+.feature-card p {
+  color: #e0e0e0;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  margin: 0;
+  margin-bottom: 8px;
+  flex-grow: 1;
+}
+
+.feature-card-arrow {
+  color: #ffd740;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: right;
+  transition: transform 0.3s ease;
+}
+
+.feature-card:hover .feature-card-arrow {
+  transform: translateX(5px);
+}
+
 .how-to-use-cta {
   text-align: center;
-  margin-top: auto;
+  margin-top: 30px;
+  margin-bottom: 40px;
 }
 
 .how-to-use-btn {
@@ -212,11 +324,13 @@
   .how-to-use-title {
     font-size: 2rem;
     margin-bottom: 10px;
+    text-align: center;
   }
   
   .how-to-use-subtitle {
     font-size: 1rem;
     margin-bottom: 30px;
+    text-align: center;
   }
   
   .how-to-use-steps {
@@ -242,13 +356,35 @@
   .step-content p {
     font-size: 0.85rem;
   }
+
+  .feature-cards-title {
+    font-size: 1.6rem;
+  }
+
+  .feature-cards-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .feature-cards-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    max-height: 350px;
+  }
+
+  .feature-card {
+    padding: 14px;
+  }
+
+  .feature-card h4 {
+    font-size: 0.95rem;
+  }
 }
 
 @media (max-width: 480px) {
   .landing2-logo-p {
     font-size: 2rem;
     top: 10px;
-    left: 20px;
+    left: 10px;
   }
   
   .landing2-logout-btn-top {
@@ -264,6 +400,7 @@
   
   .how-to-use-title {
     font-size: 1.6rem;
+    text-align: center;
   }
   
   .step-card {
@@ -274,5 +411,26 @@
   
   .how-to-use-steps {
     max-height: 45vh;
+  }
+
+  .feature-cards-title {
+    font-size: 1.4rem;
+  }
+
+  .feature-cards-subtitle {
+    font-size: 0.85rem;
+  }
+
+  .feature-card {
+    padding: 10px;
+    min-height: 120px;
+  }
+
+  .feature-card h4 {
+    font-size: 0.9rem;
+  }
+
+  .feature-card p {
+    font-size: 0.8rem;
   }
 } 

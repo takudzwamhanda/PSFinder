@@ -6,6 +6,7 @@ import { db } from "../firebase";
 import { collection, getDocs, addDoc, collection as firestoreCollection, query, where, onSnapshot } from "firebase/firestore";
 import { AuthContext } from '../main';
 import ReactDOM from 'react-dom';
+import { useNavigate } from 'react-router-dom';
 
 // Fix default icon issue in Leaflet when using with React
 import iconUrl from 'leaflet/dist/images/marker-icon.png';
@@ -83,6 +84,7 @@ class LeafletMapErrorBoundary extends React.Component {
 
 const LeafletMapView = () => {
   const [parkingSpots, setParkingSpots] = useState([]);
+  const [filteredSpots, setFilteredSpots] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [search, setSearch] = useState("");
@@ -103,17 +105,14 @@ const LeafletMapView = () => {
   const mapRef = useRef(null);
   const center = { lat: -17.813, lng: 31.008 }; // Harare, Zimbabwe
   const [bookingLoading, setBookingLoading] = useState(false);
+  const navigate = useNavigate();
   
   // Get user from AuthContext with comprehensive safety checks
   let user = null;
   try {
     const authContext = useContext(AuthContext);
-    console.log('LeafletMapView - AuthContext:', authContext);
     if (authContext && typeof authContext === 'object' && 'user' in authContext) {
       user = authContext.user;
-      console.log('LeafletMapView - User from context:', user);
-    } else {
-      console.log('LeafletMapView - No valid user in context');
     }
   } catch (error) {
     console.warn('AuthContext not available or invalid:', error);
@@ -127,25 +126,28 @@ const LeafletMapView = () => {
     if (navigator.geolocation) {
       const options = {
         enableHighAccuracy: true,
-        timeout: 15000, // Increased timeout
+        timeout: 20000, // Increased timeout for better accuracy
         maximumAge: 0 // Always get fresh location
       };
 
       const successCallback = (position) => {
-        console.log('Location accuracy:', position.coords.accuracy, 'meters');
+        const accuracy = position.coords.accuracy;
         
-        // Only use location if accuracy is good enough (within 50 meters)
-        if (position.coords.accuracy <= 50) {
-          const newUserLocation = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-            accuracy: position.coords.accuracy
-          };
-          setUserLocation(newUserLocation);
-          console.log('Location set with accuracy:', position.coords.accuracy, 'meters');
-        } else {
-          console.warn('Location accuracy too low:', position.coords.accuracy, 'meters');
-          alert('Location accuracy is low (' + position.coords.accuracy + ' meters). Please ensure GPS is enabled and try again.');
+        // Only log if accuracy is very poor (over 1000m)
+        if (accuracy > 1000) {
+          console.warn('Location accuracy is very poor:', accuracy, 'meters');
+        }
+        
+        const newUserLocation = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+          accuracy: accuracy
+        };
+        setUserLocation(newUserLocation);
+        
+        // Only show alert for very poor accuracy
+        if (accuracy > 5000) {
+          alert(`Location accuracy is very poor (${Math.round(accuracy/1000)}km). Directions may not be accurate. For better results, move to an open area and refresh.`);
         }
       };
 
@@ -153,22 +155,22 @@ const LeafletMapView = () => {
         console.warn('Geolocation error:', error);
         switch(error.code) {
           case error.PERMISSION_DENIED:
-            alert('Location permission denied. Please enable location access in your browser settings.');
+            alert('Location permission denied. Please enable location access in your browser settings to get accurate directions.');
             break;
           case error.POSITION_UNAVAILABLE:
-            alert('Location information unavailable. Please check your GPS settings.');
+            alert('Location information unavailable. Please check your GPS settings and ensure you are outdoors or near a window.');
             break;
           case error.TIMEOUT:
-            alert('Location request timed out. Please try again.');
+            alert('Location request timed out. Please try again in an area with better GPS signal.');
             break;
           default:
-            alert('Location error occurred. Please try again.');
+            alert('Location error occurred. Please check your device settings and try again.');
         }
       };
 
       navigator.geolocation.getCurrentPosition(successCallback, errorCallback, options);
     } else {
-      alert('Geolocation is not supported by this browser.');
+      alert('Geolocation is not supported by this browser. Please use a modern browser for accurate directions.');
     }
   }, []);
 
@@ -178,7 +180,21 @@ const LeafletMapView = () => {
       try {
         const querySnapshot = await getDocs(collection(db, "parkingSpots"));
         const spots = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        
+        // Log spots with invalid coordinates for debugging
+        const invalidSpots = spots.filter(spot => 
+          !spot.lat || !spot.lng || 
+          typeof spot.lat !== 'number' || typeof spot.lng !== 'number' ||
+          isNaN(spot.lat) || isNaN(spot.lng) ||
+          spot.lat < -90 || spot.lat > 90 || spot.lng < -180 || spot.lng > 180
+        );
+        
+        if (invalidSpots.length > 0) {
+          console.warn('Found spots with invalid coordinates:', invalidSpots.map(s => ({ id: s.id, name: s.name, lat: s.lat, lng: s.lng })));
+        }
+        
         setParkingSpots(spots);
+        setFilteredSpots(spots); // Initially show all spots
       } catch (error) {
         console.error("Error fetching parking spots:", error);
       }
@@ -213,9 +229,43 @@ const LeafletMapView = () => {
     return () => unsubscribe();
   }, []);
 
+  // Filter spots based on search query and validate coordinates
+  const filterSpots = (spots, searchQuery) => {
+    // First, filter out spots with invalid coordinates
+    const validSpots = spots.filter(spot => 
+      spot.lat && spot.lng && 
+      typeof spot.lat === 'number' && 
+      typeof spot.lng === 'number' &&
+      !isNaN(spot.lat) && !isNaN(spot.lng) &&
+      spot.lat >= -90 && spot.lat <= 90 &&
+      spot.lng >= -180 && spot.lng <= 180
+    );
+    
+    if (!searchQuery.trim()) {
+      return validSpots; // Show all valid spots if no search query
+    }
+    
+    const query = searchQuery.toLowerCase();
+    return validSpots.filter(spot => 
+      spot.name?.toLowerCase().includes(query) ||
+      spot.address?.toLowerCase().includes(query) ||
+      spot.description?.toLowerCase().includes(query)
+    );
+  };
+
   const handleSearch = async (e) => {
     e.preventDefault();
-    if (!search) return;
+    if (!search) {
+      setFilteredSpots(parkingSpots); // Show all spots if search is cleared
+      setSearchResult(null);
+      return;
+    }
+    
+    // Filter spots based on search query
+    const filtered = filterSpots(parkingSpots, search);
+    setFilteredSpots(filtered);
+    
+    // Also search for location on map
     try {
       const response = await fetch(
         `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(search)}`
@@ -229,23 +279,24 @@ const LeafletMapView = () => {
         }
       } else {
         setSearchResult(null);
-        alert("Location not found.");
+        // Don't show alert if we found filtered spots, only if no location found
+        if (filtered.length === 0) {
+          alert("No parking spots found matching your search.");
+        }
       }
     } catch (err) {
       setSearchResult(null);
-      alert("Error searching location.");
+      if (filtered.length === 0) {
+        alert("Error searching location.");
+      }
     }
   };
 
   const handleBook = (spot) => {
-    console.log('handleBook called with spot:', spot);
-    console.log('Setting booking spot and opening modal...');
     setBookingSpot(spot);
     setBookingDate("");
     setBookingTime("");
     setShowBookingModal(true);
-    console.log('Booking spot set to:', spot);
-    console.log('Modal should now be visible');
   };
 
     const checkSpotAvailability = async (spotId) => {
@@ -280,13 +331,6 @@ const LeafletMapView = () => {
 
   const handleBookingSubmit = async (e) => {
     e.preventDefault();
-    console.log('=== BOOKING SUBMISSION DEBUG ===');
-    console.log('handleBookingSubmit called');
-    console.log('Current user:', user);
-    console.log('User UID:', user?.uid);
-    console.log('Booking spot:', bookingSpot);
-    console.log('Booking date:', bookingDate);
-    console.log('Booking time:', bookingTime);
     
     if (!user || !user.uid) {
       console.error('No user or user.uid found!');
@@ -315,8 +359,7 @@ const LeafletMapView = () => {
       return;
     }
 
-    const bookingUserId = user.uid;
-    console.log('Booking userId:', bookingUserId);
+          const bookingUserId = user.uid;
     
     // Validate payment method
     if (!selectedPaymentMethod) {
@@ -352,14 +395,11 @@ const LeafletMapView = () => {
       createdAt: new Date().toISOString()
     };
     
-    console.log('Full booking data object:', bookingData);
-    console.log('About to call addDoc with collection:', collection(db, 'bookings'));
-    console.log('=== END DEBUG ===');
+    
 
     try {
       // Create booking
-      const bookingRef = await addDoc(collection(db, 'bookings'), bookingData);
-      console.log('Booking created successfully with ID:', bookingRef.id);
+              const bookingRef = await addDoc(collection(db, 'bookings'), bookingData);
       
       // Create payment record
       const paymentData = {
@@ -380,8 +420,7 @@ const LeafletMapView = () => {
         bankAccount: selectedPaymentMethod === 'bank' ? bankAccount : null
       };
       
-      await addDoc(collection(db, 'payments'), paymentData);
-      console.log('Payment created successfully');
+              await addDoc(collection(db, 'payments'), paymentData);
       
       alert('Booking confirmed and payment processed! Check your bookings page.');
       setShowBookingModal(false);
@@ -409,14 +448,15 @@ const LeafletMapView = () => {
     if (navigator.geolocation) {
       const options = {
         enableHighAccuracy: true,
-        timeout: 15000,
+        timeout: 20000, // Increased timeout for better accuracy
         maximumAge: 0
       };
 
       const successCallback = (position) => {
-        console.log('Location accuracy:', position.coords.accuracy, 'meters');
+
         
-        if (position.coords.accuracy <= 50) {
+        // Reduced accuracy threshold from 50m to 100m for better usability
+        if (position.coords.accuracy <= 100) {
           const newUserLocation = {
             lat: position.coords.latitude,
             lng: position.coords.longitude,
@@ -426,8 +466,15 @@ const LeafletMapView = () => {
           setLocationLoading(false);
           alert('Location updated! Accuracy: ' + position.coords.accuracy + ' meters');
         } else {
+          // Still use the location but warn the user
+          const newUserLocation = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+            accuracy: position.coords.accuracy
+          };
+          setUserLocation(newUserLocation);
           setLocationLoading(false);
-          alert('Location accuracy is low (' + position.coords.accuracy + ' meters). Please move to an open area and try again.');
+          alert(`Location updated but accuracy is low (${position.coords.accuracy} meters). For better directions, move to an open area and try again.`);
         }
       };
 
@@ -436,16 +483,16 @@ const LeafletMapView = () => {
         console.warn('Geolocation error:', error);
         switch(error.code) {
           case error.PERMISSION_DENIED:
-            alert('Location permission denied. Please enable location access in your browser settings.');
+            alert('Location permission denied. Please enable location access in your browser settings to get accurate directions.');
             break;
           case error.POSITION_UNAVAILABLE:
-            alert('Location information unavailable. Please check your GPS settings.');
+            alert('Location information unavailable. Please check your GPS settings and ensure you are outdoors or near a window.');
             break;
           case error.TIMEOUT:
-            alert('Location request timed out. Please try again.');
+            alert('Location request timed out. Please try again in an area with better GPS signal.');
             break;
           default:
-            alert('Location error occurred. Please try again.');
+            alert('Location error occurred. Please check your device settings and try again.');
         }
       };
 
@@ -458,10 +505,18 @@ const LeafletMapView = () => {
       // Use real-time user location as origin
       const url = `https://www.google.com/maps/dir/?api=1&origin=${userLocation.lat},${userLocation.lng}&destination=${lat},${lng}`;
       window.open(url, '_blank');
+      
+      // Provide feedback about location accuracy
+      if (userLocation.accuracy > 100) {
+        alert(`Directions opened! Note: Your location accuracy is ${userLocation.accuracy} meters. For more precise directions, try refreshing your location from an open area.`);
+      } else {
+        alert('Directions opened with your current location!');
+      }
     } else {
       // Fallback to destination-only if user location not available
       const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
       window.open(url, '_blank');
+      alert('Directions opened! Since your location is not available, you may need to set your starting point manually in Google Maps.');
     }
   };
 
@@ -480,6 +535,7 @@ const LeafletMapView = () => {
   return (
     <LeafletMapErrorBoundary>
     <div style={containerStyle}>
+
       <form onSubmit={handleSearch} style={{ 
         marginBottom: 12, 
         display: 'flex', 
@@ -495,8 +551,18 @@ const LeafletMapView = () => {
         <input
           type="text"
           value={search}
-          onChange={e => setSearch(e.target.value)}
-          placeholder="Search for a place or address..."
+          onChange={e => {
+            const newSearch = e.target.value;
+            setSearch(newSearch);
+            // Real-time filtering
+            if (!newSearch.trim()) {
+              setFilteredSpots(parkingSpots); // Show all spots when search is cleared
+            } else {
+              const filtered = filterSpots(parkingSpots, newSearch);
+              setFilteredSpots(filtered);
+            }
+          }}
+          placeholder="Search for parking spots, addresses, or locations..."
           style={{ 
             flex: 1, 
             padding: '12px 16px', 
@@ -504,7 +570,11 @@ const LeafletMapView = () => {
             border: '1px solid rgba(255, 255, 255, 0.2)',
             background: 'rgba(255, 255, 255, 0.1)',
             color: '#ffffff',
-            fontSize: '14px'
+            fontSize: '14px',
+            backgroundImage: 'none',
+            backgroundPosition: 'initial',
+            backgroundSize: 'initial',
+            backgroundRepeat: 'no-repeat'
           }}
         />
         <button type="submit" style={{ 
@@ -539,6 +609,35 @@ const LeafletMapView = () => {
         >
           {locationLoading ? '⏳' : '📍'}
           {locationLoading ? 'Updating...' : 'My Location'}
+        </button>
+        <button 
+          type="button"
+          onClick={() => alert(`📍 Location Accuracy Tips:
+
+• Move to an open area (outdoors or near windows)
+• Ensure GPS is enabled on your device
+• Wait a few seconds for GPS to lock on
+• Avoid being inside buildings or underground
+• Check that location permissions are granted
+• Try refreshing location multiple times if needed
+
+Current accuracy: ${userLocation ? userLocation.accuracy + ' meters' : 'Not available'}`)}
+          style={{ 
+            padding: '12px 12px', 
+            borderRadius: '8px', 
+            background: '#ffd740', 
+            color: '#23201d', 
+            border: 'none', 
+            fontWeight: 600, 
+            cursor: 'pointer',
+            fontSize: '14px',
+            transition: 'all 0.3s ease',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px'
+          }}
+        >
+          ❓
         </button>
       </form>
       <MapContainer
@@ -586,8 +685,17 @@ const LeafletMapView = () => {
           }}>
             Loading parking spots...
           </div>
-        ) : validSpots.map((spot) => {
+        ) : filteredSpots.map((spot) => {
           const isAvailable = activeBookings[spot.id] !== false; // Default to available if not checked yet
+          
+          // Additional validation to prevent rendering invalid markers
+          if (!spot.lat || !spot.lng || 
+              typeof spot.lat !== 'number' || typeof spot.lng !== 'number' ||
+              isNaN(spot.lat) || isNaN(spot.lng) ||
+              spot.lat < -90 || spot.lat > 90 || spot.lng < -180 || spot.lng > 180) {
+            return null; // Skip rendering this marker
+          }
+          
           return (
             <Marker
               key={spot.id}

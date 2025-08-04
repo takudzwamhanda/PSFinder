@@ -16,7 +16,43 @@ const Login = () => {
     setLoading(true);
     setError("");
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      
+      // Check if email is verified
+      if (!user.emailVerified) {
+        setError(
+          <>
+            Please verify your email address before logging in. 
+            <br />
+            <span style={{ fontSize: '14px', opacity: '0.8' }}>
+              Check your email ({email}) for the verification link.
+            </span>
+            <br />
+            <span 
+              className="register-link" 
+              style={{ cursor: 'pointer', textDecoration: 'underline', fontSize: '14px' }}
+              onClick={async () => {
+                try {
+                  await sendEmailVerification(user, {
+                    url: window.location.origin + '/login',
+                    handleCodeInApp: false
+                  });
+                  setError("Verification email sent! Please check your inbox and spam folder.");
+                } catch (err) {
+                  console.error('Verification error:', err);
+                  setError("Email verification service temporarily unavailable. Please try logging in directly or contact support.");
+                }
+              }}
+            >
+              Resend verification email
+            </span>
+          </>
+        );
+        setLoading(false);
+        return;
+      }
+      
       setLoading(false);
       navigate('/landing2');
     } catch (err) {
@@ -27,6 +63,8 @@ const Login = () => {
         setError("Incorrect password. Please try again.");
       } else if (err.code === 'auth/invalid-credential') {
         setError("Invalid email or password. Please try again.");
+      } else if (err.code === 'auth/too-many-requests') {
+        setError("Too many failed attempts. Please try again later.");
       } else {
         setError(err.message || "Failed to log in.");
       }

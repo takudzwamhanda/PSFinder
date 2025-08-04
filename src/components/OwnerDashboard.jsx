@@ -13,7 +13,8 @@ const OwnerDashboard = () => {
     pendingPayouts: 0,
     completedPayouts: 0
   });
-  const { user } = useContext(AuthContext);
+  const authContext = useContext(AuthContext);
+const user = authContext?.user;
 
   useEffect(() => {
     if (user) {

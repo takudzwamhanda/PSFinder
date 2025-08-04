@@ -3,6 +3,7 @@ import { db, auth } from "../firebase";
 import { collection, query, where, getDocs, addDoc, doc, updateDoc, getDoc, deleteDoc, orderBy } from "firebase/firestore";
 import { useLocation } from 'react-router-dom';
 import { AuthContext } from '../main';
+import AppComments from './AppComments';
 
 // Error Boundary Component
 class ErrorBoundary extends React.Component {
@@ -68,7 +69,8 @@ const Reviews = () => {
   const location = useLocation();
   
   // Get user from AuthContext
-  const { user } = useContext(AuthContext);
+  const authContext = useContext(AuthContext);
+const user = authContext?.user;
 
   // Fetch all parking spots for the dropdown
   const fetchAllParkingSpots = async () => {
@@ -331,22 +333,7 @@ const Reviews = () => {
     }
   };
 
-  // Debug function to check spot data
-  const debugSpotData = () => {
-    console.log('=== DEBUG: Spot Data ===');
-    console.log('Parking spots state:', parkingSpots);
-    console.log('Reviews with spot data:');
-    reviews.forEach(review => {
-      console.log(`Review ${review.id}:`, {
-        spotId: review.spotId,
-        spotName: review.spotName,
-        spotAddress: review.spotAddress,
-        hasSpotData: !!parkingSpots[review.spotId],
-        spotData: parkingSpots[review.spotId]
-      });
-    });
-    console.log('=== END DEBUG ===');
-  };
+
 
   // Fetch reviews on component mount
   useEffect(() => {
@@ -627,29 +614,7 @@ const Reviews = () => {
                    Add New Review
                 </button>
                 
-                {/* Debug Button */}
-                <button 
-                  onClick={debugSpotData}
-                  style={{
-                    background: 'rgba(33, 150, 243, 0.2)',
-                    color: '#2196f3',
-                    border: '1px solid rgba(33, 150, 243, 0.3)',
-                    borderRadius: '12px',
-                    padding: '16px 32px',
-                    fontWeight: '600',
-                    cursor: 'pointer',
-                    fontSize: '0.9rem',
-                    transition: 'all 0.3s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.background = 'rgba(33, 150, 243, 0.3)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.background = 'rgba(33, 150, 243, 0.2)';
-                  }}
-                >
-                   🔍 Debug Spot Data
-                </button>
+
         </div>
 
               {reviews.length === 0 ? (
@@ -828,6 +793,9 @@ const Reviews = () => {
         )}
         </div>
       </div>
+
+      {/* App Comments Section */}
+      <AppComments />
 
       {/* Add Review Modal */}
       {showAddReview && (
