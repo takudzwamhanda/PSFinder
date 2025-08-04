@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import './About.css';
 import NicoleImg from '../imgs/Nicole.jpg';
 import AlvisImg from '../imgs/Alvis.jpg';
-import DasylynImg from '../imgs/dasylyn.jpg';
+import DasylynImg from '../imgs/Dasylyn.jpg';
 
 const aboutContainer = {
   fontFamily: 'Inter, Poppins, sans-serif',
