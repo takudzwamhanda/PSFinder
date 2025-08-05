@@ -1,175 +1,69 @@
 /* MySpots.css - Modern Professional Design */
 
-.myspots-root {
-  min-height: 100vh;
-  background: linear-gradient(rgba(35, 35, 35, 0.95), rgba(35, 35, 35, 0.95)), url('../imgs/footer back.jpg');
+.my-spots-container {
+  background: linear-gradient(rgba(35, 32, 29, 0.9), rgba(35, 32, 29, 0.9)), url('../imgs/240_F_1605402604_RpeNQMy10VdQEn014GKqPX571gUIAfFa.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
-  font-family: 'Segoe UI', Arial, sans-serif;
-  color: #ffffff;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Loading animation */
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-/* Header styles */
-.myspots-header {
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  min-height: 100vh;
   padding: 20px;
-  border-radius: 16px 16px 0 0;
-  border-bottom: 1px solid rgba(255, 215, 64, 0.2);
   position: relative;
-  overflow: hidden;
-  z-index: 999;
 }
 
-/* Logo Styles */
-.myspots-logo {
-  font-size: 40px;
-  font-weight: bold;
+.my-spots-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('../imgs/240_F_1605402604_RpeNQMy10VdQEn014GKqPX571gUIAfFa.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  filter: blur(8px);
+  z-index: -1;
+}
+
+.my-spots-header {
+  text-align: center;
+  margin-bottom: 30px;
+  position: relative;
+  z-index: 1;
+}
+
+.my-spots-title {
   color: #ffd740;
-  letter-spacing: 2px;
-  transition: all 0.3s ease;
-}
-
-.myspots-logo:hover {
-  transform: scale(1.05);
-  text-shadow: 0 0 10px rgba(255, 215, 64, 0.5);
-}
-
-.header-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.header-left {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.myspots-logo {
   font-size: 2.5rem;
-  font-weight: 700;
-  color: #ffd740;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 }
 
-.page-title {
-  font-size: 1.8rem;
-  font-weight: 600;
-  color: #ffffff;
-  margin: 0;
-}
-
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  position: relative;
-  z-index: 1000;
-}
-
-.header-actions button {
-  position: relative;
-  z-index: 1001;
-  pointer-events: auto !important;
-  cursor: pointer !important;
-  user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-}
-
-/* Additional rules to ensure buttons are clickable */
-.header-actions button[type="button"] {
-  z-index: 1002 !important;
-  pointer-events: auto !important;
-  cursor: pointer !important;
-  position: relative !important;
-}
-
-/* Ensure no other elements block the buttons */
-.header-actions {
-  pointer-events: auto !important;
-}
-
-.header-content {
-  pointer-events: auto !important;
-}
-
-.filter-btn, .add-spot-btn, .logout-btn {
-  padding: 10px 16px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.filter-btn {
-  background: rgba(255, 215, 64, 0.1);
-  color: #ffd740;
-  border: 1px solid rgba(255, 215, 64, 0.3);
-}
-
-.filter-btn:hover {
-  background: rgba(255, 215, 64, 0.2);
-  transform: translateY(-1px);
-}
-
-.add-spot-btn {
-  background: #ffd740;
-  color: #23201d;
-  box-shadow: 0 4px 12px rgba(255, 215, 64, 0.3);
-}
-
-.add-spot-btn:hover {
-  background: #ffe082;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(255, 215, 64, 0.4);
-}
-
-.logout-btn {
-  background: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.logout-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-1px);
+.my-spots-subtitle {
+  color: #fff;
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
 }
 
 /* Search and Filters Section */
 .search-filters-section {
   background: rgba(35, 35, 35, 0.8);
-  padding:  90px 0 12px 0; /* Increased top padding even more for desktop/tablet to create substantial space from top buttons */
+  padding: 20px 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  flex-shrink: 0;
-  z-index: 999;
   position: relative;
+  z-index: 1;
+  margin-bottom: 20px;
 }
 
 .search-container {
-  max-width: 1200px;
+  max-width: 800px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 20px;
+  text-align: center;
 }
 
 .search-box {
@@ -178,8 +72,11 @@
   background: rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   padding: 4px;
-  margin-bottom: 8px; /* Reduced margin from 16px to 8px */
+  margin-bottom: 16px;
   border: 1px solid rgba(255, 255, 255, 0.2);
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .search-input {
@@ -205,6 +102,7 @@
   font-size: 1.1rem;
   cursor: pointer;
   transition: all 0.3s ease;
+  font-weight: 600;
 }
 
 .search-btn:hover {
@@ -215,10 +113,10 @@
 .filters-container {
   display: flex;
   gap: 12px;
+  justify-content: center;
   flex-wrap: wrap;
 }
 
-/* Filter Selects */
 .filter-select {
   padding: 10px 16px;
   border-radius: 8px;
@@ -245,39 +143,20 @@
   box-shadow: 0 0 0 2px rgba(255, 215, 64, 0.2);
 }
 
-/* Style the dropdown options */
-.filter-select option {
-  background: #2d2d2d;
-  color: #ffffff;
-  padding: 8px;
-  border: none;
-}
-
-/* For better visibility on different browsers */
-.filter-select::-ms-expand {
-  display: none;
-}
-
-.filter-select {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-}
-
 /* Stats Section */
 .stats-section {
   background: rgba(35, 35, 35, 0.6);
   padding: 20px 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  flex-shrink: 0;
-  z-index: 998;
   position: relative;
+  z-index: 1;
+  margin-bottom: 20px;
 }
 
 .stats-container {
-  max-width: 1200px;
+  max-width: 800px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 20px;
   display: flex;
   gap: 20px;
   justify-content: center;
@@ -315,16 +194,15 @@
 /* Main Content */
 .main-content {
   flex: 1;
-  padding: 24px 0;
+  padding: 20px 0;
   position: relative;
   z-index: 1;
-  min-height: 0;
 }
 
 .content-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 20px;
   height: 100%;
 }
 
@@ -334,27 +212,236 @@
   overflow: hidden;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  height: 400px;
+  height: 500px;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.map-container button,
+.map-container-btn {
+  background: linear-gradient(135deg, #ffd740 0%, #ffe082 100%);
+  color: #23201d;
+  border: none;
+  border-radius: 8px;
+  padding: 16px 32px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(255, 215, 64, 0.3);
+  z-index: 10;
+  position: relative;
+}
+
+.map-container button:hover,
+.map-container-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 215, 64, 0.4);
+}
+
+.spots-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 25px;
+  max-width: 1200px;
+  margin: 0 auto;
   position: relative;
   z-index: 1;
 }
 
+.spot-card {
+  background: rgba(35, 32, 29, 0.95);
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 215, 64, 0.2);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.spot-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #ffd740, #ffe082);
+  border-radius: 16px 16px 0 0;
+}
+
+.spot-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  border-color: rgba(255, 215, 64, 0.4);
+}
+
+.spot-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 15px;
+}
+
+.spot-title {
+  color: #ffd740;
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.spot-location {
+  color: #fff;
+  font-size: 1rem;
+  margin-bottom: 10px;
+  opacity: 0.9;
+}
+
+.spot-price {
+  color: #4caf50;
+  font-size: 1.2rem;
+  font-weight: bold;
+  background: rgba(76, 175, 80, 0.1);
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+.spot-details {
+  margin: 15px 0;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  color: #fff;
+  font-size: 0.9rem;
+}
+
+.detail-label {
+  opacity: 0.8;
+}
+
+.detail-value {
+  font-weight: 600;
+  color: #ffd740;
+}
+
+.spot-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  flex: 1;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px;
+}
+
+.book-btn {
+  background: linear-gradient(135deg, #ffd740 0%, #ffe082 100%);
+  color: #23201d;
+  box-shadow: 0 4px 15px rgba(255, 215, 64, 0.3);
+}
+
+.book-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 215, 64, 0.4);
+}
+
+.book-btn:disabled {
+  background: #ccc;
+  color: #666;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.directions-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.directions-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.loading-container {
+  text-align: center;
+  padding: 50px 20px;
+  color: #fff;
+  position: relative;
+  z-index: 1;
+}
+
+.loading-spinner {
+  border: 4px solid rgba(255, 215, 64, 0.3);
+  border-top: 4px solid #ffd740;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error-container {
+  text-align: center;
+  padding: 50px 20px;
+  color: #ff6b6b;
+  position: relative;
+  z-index: 1;
+}
+
+.no-spots-container {
+  text-align: center;
+  padding: 50px 20px;
+  color: #fff;
+  position: relative;
+  z-index: 1;
+}
+
+.no-spots-icon {
+  font-size: 4rem;
+  color: #ffd740;
+  margin-bottom: 20px;
+  opacity: 0.7;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
-  .header-content {
-    flex-direction: column;
-    gap: 16px;
-    align-items: stretch;
+  .my-spots-title {
+    font-size: 2rem;
   }
   
-  .header-actions {
-    justify-content: center;
-    flex-wrap: wrap;
+  .search-container {
+    padding: 0 15px;
   }
   
   .search-box {
     flex-direction: column;
     gap: 8px;
+    padding: 8px;
   }
   
   .search-input {
@@ -375,100 +462,55 @@
     max-width: 200px;
   }
   
+  .spots-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .spot-card {
+    padding: 20px;
+  }
+  
+  .spot-actions {
+    flex-direction: column;
+  }
+  
+  .action-btn {
+    width: 100%;
+  }
+  
   .map-container {
-    height: 300px;
-  }
-
-  /* Mobile-specific improvements */
-  .myspots-header {
-    padding: 16px;
-    border-radius: 12px 12px 0 0;
-  }
-
-  .page-title {
-    font-size: 1.4rem;
-  }
-
-  .search-filters-section {
-    padding: 32px 0 8px 0; /* Increased top padding for mobile to create more space from top buttons */
-  }
-
-  .search-container {
-    padding: 0 16px;
-  }
-
-  .search-box {
-    padding: 8px;
-    border-radius: 8px;
-  }
-
-  .search-input {
-    padding: 10px 12px;
-    font-size: 0.9rem;
-  }
-
-  .filter-select {
-    padding: 8px 12px;
-    font-size: 0.85rem;
-    min-width: 120px;
-  }
-
-  .stats-section {
-    padding: 16px 0;
-  }
-
-  .stats-container {
-    padding: 0 16px;
-    gap: 12px;
-  }
-
-  .stat-card {
-    padding: 12px;
-    border-radius: 8px;
-  }
-
-  .stat-number {
-    font-size: 1.2rem;
-  }
-
-  .stat-label {
-    font-size: 0.8rem;
-  }
-
-  .main-content {
-    padding: 16px;
-  }
-
-  .content-container {
-    gap: 16px;
-  }
-
-  .map-container {
-    border-radius: 12px;
-    height: 350px;
+    height: 400px;
   }
 }
 
 @media (max-width: 480px) {
-  .header-content {
-    padding: 0 16px;
+  .my-spots-container {
+    padding: 15px;
+  }
+  
+  .my-spots-title {
+    font-size: 1.8rem;
   }
   
   .search-container {
-    padding: 0 16px;
+    padding: 0 10px;
   }
   
-  .content-container {
-    padding: 0 16px;
+  .stats-container {
+    padding: 0 10px;
   }
   
-  .page-title {
-    font-size: 1.4rem;
+  .spot-card {
+    padding: 15px;
   }
   
-  .filter-btn, .add-spot-btn, .logout-btn {
-    padding: 8px 12px;
-    font-size: 0.8rem;
+  .spot-title {
+    font-size: 1.2rem;
+  }
+  
+  .map-container {
+    height: 350px;
   }
 }
 

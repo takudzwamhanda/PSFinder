@@ -92,14 +92,7 @@ const ParkingSpotList = ({ spots, searchQuery, priceFilter, availabilityFilter, 
   };
 
   return (
-    <div style={{
-      padding: '20px',
-      background: 'rgba(255, 255, 255, 0.02)',
-      borderRadius: '16px',
-      border: '1px solid rgba(255, 255, 255, 0.1)',
-      height: '100%',
-      overflowY: 'auto'
-    }}>
+    <div className="spots-grid">
       {filteredSpots.length === 0 ? (
         <div style={{
           textAlign: 'center',
@@ -115,24 +108,7 @@ const ParkingSpotList = ({ spots, searchQuery, priceFilter, availabilityFilter, 
           {filteredSpots.map((spot) => {
             const isAvailable = activeBookings[spot.id] !== false; // Default to available if not checked yet
             return (
-              <div key={spot.id} style={{
-                background: 'linear-gradient(145deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%)',
-                borderRadius: '16px',
-                padding: '20px',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-                transition: 'all 0.3s ease',
-                position: 'relative'
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.transform = 'translateY(-2px)';
-                e.target.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.3)';
-                e.target.style.borderColor = 'rgba(255, 215, 64, 0.3)';
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.transform = 'translateY(0)';
-                e.target.style.boxShadow = 'none';
-                e.target.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-              }}
+              <div key={spot.id} className="spot-card"
               >
                 {/* Availability indicator */}
                 <div style={{
@@ -513,17 +489,11 @@ const MySpots = () => {
   };
 
   return (
-    <div className="myspots-root">
+    <div className="my-spots-container">
       {/* Modern Header */}
-      <header className="myspots-header">
-        <div className="header-content">
-          <div className="header-left">
-            {/* Header content without logo since LogoOnlyNavbar handles it */}
-          </div>
-          <div className="header-actions">
-            {/* Header actions removed - using fixed logout button instead */}
-          </div>
-        </div>
+      <header className="my-spots-header">
+        <h1 className="my-spots-title">Find Parking Spots</h1>
+        <p className="my-spots-subtitle">Discover and book available parking spaces near you</p>
       </header>
 
             {/* Top Right Buttons - Logout and View Toggle */}
@@ -624,32 +594,7 @@ const MySpots = () => {
             <button 
               type="button"
               onClick={handleSearch}
-              style={{
-                background: 'linear-gradient(135deg, #ffd740, #ffe082)',
-                color: '#23201d',
-                border: 'none',
-                borderRadius: '10px',
-                padding: '12px 20px',
-                fontWeight: '600',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-                boxShadow: '0 4px 12px rgba(255, 215, 64, 0.3)',
-                position: 'relative',
-                zIndex: 10,
-                minWidth: '100px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '6px'
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.transform = 'translateY(-2px)';
-                e.target.style.boxShadow = '0 6px 16px rgba(255, 215, 64, 0.4)';
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.transform = 'translateY(0)';
-                e.target.style.boxShadow = '0 4px 12px rgba(255, 215, 64, 0.3)';
-              }}
+              className="search-btn"
             >
               🔍 Search
             </button>
@@ -788,20 +733,7 @@ const MySpots = () => {
                   </div>
                   <button
                     onClick={() => setViewMode('list')}
-                    style={{
-                      background: 'linear-gradient(135deg, #ffd740, #ffe082)',
-                      color: '#23201d',
-                      border: 'none',
-                      borderRadius: '10px',
-                      padding: '12px 24px',
-                      fontWeight: '600',
-                      cursor: 'pointer',
-                      fontSize: '14px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                      margin: '0 auto'
-                    }}
+                    className="map-container-btn"
                   >
                      Switch to List View
                   </button>
