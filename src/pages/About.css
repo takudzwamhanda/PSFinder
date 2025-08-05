@@ -7,7 +7,11 @@ body {
   width: 100vw;
   min-height: 100vh;
   margin: 0;
-  background: #fff;
+  background: linear-gradient(rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.98)), url('../imgs/Underground-Car-Park.webp');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   border-radius: 0;
   box-shadow: none;
   padding: 56px 5vw 64px 5vw;
@@ -15,6 +19,22 @@ body {
   display: block;
   position: relative;
   overflow: hidden;
+}
+
+.about-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('../imgs/Underground-Car-Park.webp');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  filter: blur(15px);
+  z-index: -1;
 }
 
 .about-section > * {
@@ -97,11 +117,50 @@ body {
 }
 
 .about-team-role {
-  color: #888;
+  color: #000000;
   font-size: 1rem;
-  font-weight: 500;
-  margin-top: 2px;
+  font-weight: 600;
+  margin-top: 4px;
   letter-spacing: 0.2px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.about-features {
+  max-width: 700px;
+  margin: 0 auto 32px auto;
+}
+
+.features-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+  background: rgba(255, 255, 255, 0.0);
+  border-radius: 16px;
+  padding: 24px 32px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.features-list li {
+  color: #000000;
+  font-size: 1.1rem;
+  font-weight: 500;
+  line-height: 1.8;
+  margin-bottom: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 215, 64, 0.2);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.features-list li:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.features-list li:hover {
+  color: #ffd740;
+  transform: translateX(5px);
+  transition: all 0.3s ease;
 }
 
 .about-team-img {
@@ -127,22 +186,25 @@ body {
   font-weight: 800;
   margin-bottom: 32px;
   letter-spacing: 1px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .about-subtitle {
-  color: #23201d;
+  color: #000000;
   font-size: 1.6rem;
   font-weight: 700;
   margin-top: 36px;
   margin-bottom: 14px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .about-text {
-  color: #23201d;
+  color: #000000;
   font-size: 1.18rem;
   margin-bottom: 22px;
-  font-weight: 400;
+  font-weight: 500;
   line-height: 1.6;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .about-team {

@@ -23,6 +23,7 @@
   border-bottom: 1px solid rgba(255, 215, 64, 0.2);
   position: relative;
   overflow: hidden;
+  z-index: 999;
 }
 
 /* Logo Styles */
@@ -72,6 +73,36 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  position: relative;
+  z-index: 1000;
+}
+
+.header-actions button {
+  position: relative;
+  z-index: 1001;
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+/* Additional rules to ensure buttons are clickable */
+.header-actions button[type="button"] {
+  z-index: 1002 !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  position: relative !important;
+}
+
+/* Ensure no other elements block the buttons */
+.header-actions {
+  pointer-events: auto !important;
+}
+
+.header-content {
+  pointer-events: auto !important;
 }
 
 .filter-btn, .add-spot-btn, .logout-btn {
@@ -124,7 +155,7 @@
 /* Search and Filters Section */
 .search-filters-section {
   background: rgba(35, 35, 35, 0.8);
-  padding: 24px 0;
+  padding:  90px 0 12px 0; /* Increased top padding even more for desktop/tablet to create substantial space from top buttons */
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   flex-shrink: 0;
   z-index: 999;
@@ -143,7 +174,7 @@
   background: rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   padding: 4px;
-  margin-bottom: 16px;
+  margin-bottom: 8px; /* Reduced margin from 16px to 8px */
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
@@ -299,7 +330,7 @@
   overflow: hidden;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  height: 600px;
+  height: 400px;
   position: relative;
   z-index: 1;
 }
@@ -341,7 +372,76 @@
   }
   
   .map-container {
-    height: 400px;
+    height: 300px;
+  }
+
+  /* Mobile-specific improvements */
+  .myspots-header {
+    padding: 16px;
+    border-radius: 12px 12px 0 0;
+  }
+
+  .page-title {
+    font-size: 1.4rem;
+  }
+
+  .search-filters-section {
+    padding: 32px 0 8px 0; /* Increased top padding for mobile to create more space from top buttons */
+  }
+
+  .search-container {
+    padding: 0 16px;
+  }
+
+  .search-box {
+    padding: 8px;
+    border-radius: 8px;
+  }
+
+  .search-input {
+    padding: 10px 12px;
+    font-size: 0.9rem;
+  }
+
+  .filter-select {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    min-width: 120px;
+  }
+
+  .stats-section {
+    padding: 16px 0;
+  }
+
+  .stats-container {
+    padding: 0 16px;
+    gap: 12px;
+  }
+
+  .stat-card {
+    padding: 12px;
+    border-radius: 8px;
+  }
+
+  .stat-number {
+    font-size: 1.2rem;
+  }
+
+  .stat-label {
+    font-size: 0.8rem;
+  }
+
+  .main-content {
+    padding: 16px;
+  }
+
+  .content-container {
+    gap: 16px;
+  }
+
+  .map-container {
+    border-radius: 12px;
+    height: 350px;
   }
 }
 

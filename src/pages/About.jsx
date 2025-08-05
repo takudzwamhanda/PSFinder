@@ -103,13 +103,15 @@ const About = () => {
           </div>
         </div>
         <h2 className="about-subtitle">Why Choose Us?</h2>
-        <ul style={{maxWidth: 700, margin: '0 auto', fontSize: 18, color: '#23201d', lineHeight: 1.7, paddingLeft: 0, listStyle: 'none'}}>
-          <li>• Real-time parking spot search and reservation</li>
-          <li>• Secure, cashless payments</li>
-          <li>• Support for local businesses</li>
-          <li>• User-friendly, modern interface</li>
-          <li>• Trusted by drivers and lot owners</li>
-        </ul>
+        <div className="about-features">
+          <ul className="features-list">
+            <li>• Real-time parking spot search and reservation</li>
+            <li>• Secure, cashless payments</li>
+            <li>• Support for local businesses</li>
+            <li>• User-friendly, modern interface</li>
+            <li>• Trusted by drivers and lot owners</li>
+          </ul>
+        </div>
         <button onClick={handleRegisterClick} style={ctaStyle}>Join Us & Find Parking Now</button>
       </div>
     </div>

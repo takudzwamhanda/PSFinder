@@ -307,7 +307,8 @@
 
 /* Search and Filter Styles */
 .search-filter-container {
-  margin-bottom: 20px;
+  margin-bottom: 5px;
+
 }
 
 .search-filter-container input,

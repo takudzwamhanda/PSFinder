@@ -100,3 +100,112 @@
 .forgot-password-link:hover {
   text-decoration: underline;
 }
+
+.login-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.register-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 16px;
+  width: 100%;
+}
+
+.register-btn {
+  background: linear-gradient(135deg, #ffd740, #ffe082);
+  color: #23201d;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 32px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(255, 215, 64, 0.3);
+}
+
+.register-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255, 215, 64, 0.4);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .login-container {
+    padding: 20px;
+    min-height: 100vh;
+    justify-content: center;
+  }
+
+  .login-logo {
+    font-size: 3rem;
+    margin-bottom: 20px;
+  }
+
+  .login-title {
+    font-size: 1.5rem;
+    margin-bottom: 24px;
+  }
+
+  .login-form {
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .login-input {
+    padding: 14px 16px;
+    font-size: 16px; /* Prevents zoom on iOS */
+    margin-bottom: 16px;
+  }
+
+  .login-btn {
+    padding: 14px 24px;
+    font-size: 16px;
+    margin-top: 8px;
+  }
+
+  .login-links {
+    margin-top: 24px;
+  }
+
+  .register-section {
+    margin-top: 20px;
+  }
+
+  .register-btn {
+    padding: 14px 28px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-container {
+    padding: 16px;
+  }
+
+  .login-logo {
+    font-size: 2.5rem;
+  }
+
+  .login-title {
+    font-size: 1.3rem;
+  }
+
+  .login-form {
+    max-width: 280px;
+  }
+
+  .login-input {
+    padding: 12px 14px;
+  }
+
+  .login-btn {
+    padding: 12px 20px;
+  }
+}

@@ -1,0 +1,238 @@
+/* Payments Component Mobile-Responsive Styles */
+
+.payments-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #232323 0%, #2a2a2a 100%);
+  color: #ffffff;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.payments-header {
+  text-align: center;
+  margin-bottom: 30px;
+  width: 100%;
+  max-width: 800px;
+}
+
+.payments-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #ffd740;
+  margin: 0 0 8px 0;
+}
+
+.payments-subtitle {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+}
+
+.payments-content {
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.payment-method-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 24px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.payment-method-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 215, 64, 0.3);
+  transform: translateY(-2px);
+}
+
+.payment-icon {
+  font-size: 3rem;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+.payment-icon.cash {
+  background: linear-gradient(135deg, #ffd740, #ffe082);
+  color: #23201d;
+}
+
+.payment-icon.zimswit {
+  background: linear-gradient(135deg, #f44336, #ef5350);
+  color: #ffffff;
+}
+
+.payment-icon.posb {
+  background: linear-gradient(135deg, #2196f3, #42a5f5);
+  color: #ffffff;
+}
+
+.payment-icon.zimpost {
+  background: linear-gradient(135deg, #4caf50, #66bb6a);
+  color: #ffffff;
+}
+
+.payment-icon.visa {
+  background: linear-gradient(135deg, #9c27b0, #ba68c8);
+  color: #ffffff;
+}
+
+.payment-details {
+  flex: 1;
+}
+
+.payment-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 8px 0;
+}
+
+.payment-description {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.payment-status {
+  background: rgba(76, 175, 80, 0.2);
+  color: #4caf50;
+  border: 1px solid rgba(76, 175, 80, 0.3);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-top: 8px;
+  display: inline-block;
+}
+
+.section-divider {
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 16px 0;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ffd740;
+  margin: 0 0 16px 0;
+  text-align: center;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .payments-container {
+    padding: 16px;
+    justify-content: flex-start;
+    padding-top: 40px;
+  }
+
+  .payments-header {
+    margin-bottom: 24px;
+  }
+
+  .payments-title {
+    font-size: 2rem;
+  }
+
+  .payments-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .payments-content {
+    gap: 16px;
+  }
+
+  .payment-method-card {
+    padding: 20px;
+    border-radius: 12px;
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+  }
+
+  .payment-icon {
+    font-size: 2.5rem;
+    width: 50px;
+    height: 50px;
+  }
+
+  .payment-title {
+    font-size: 1.2rem;
+  }
+
+  .payment-description {
+    font-size: 0.9rem;
+  }
+
+  .payment-status {
+    font-size: 0.8rem;
+    padding: 4px 10px;
+  }
+
+  .section-title {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .payments-container {
+    padding: 12px;
+    padding-top: 32px;
+  }
+
+  .payments-title {
+    font-size: 1.8rem;
+  }
+
+  .payments-subtitle {
+    font-size: 0.85rem;
+  }
+
+  .payment-method-card {
+    padding: 16px;
+    border-radius: 10px;
+  }
+
+  .payment-icon {
+    font-size: 2rem;
+    width: 45px;
+    height: 45px;
+  }
+
+  .payment-title {
+    font-size: 1.1rem;
+  }
+
+  .payment-description {
+    font-size: 0.85rem;
+  }
+
+  .payment-status {
+    font-size: 0.75rem;
+    padding: 3px 8px;
+  }
+
+  .section-title {
+    font-size: 1.2rem;
+  }
+} 

@@ -123,7 +123,15 @@ const Login = () => {
         >
           Forgot Password?
         </button>
-        <span className="register-link" style={{ cursor: 'pointer' }} onClick={handleRegisterClick}>Register</span>
+      </div>
+      <div className="register-section">
+        <button 
+          type="button"
+          className="register-btn" 
+          onClick={handleRegisterClick}
+        >
+          Register
+        </button>
       </div>
     </div>
   );

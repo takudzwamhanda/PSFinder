@@ -1,232 +1,173 @@
-.whychoose-root {
-  background: #181613;
+.whychoose-section {
+  background: url('../imgs/footer back.jpg') no-repeat center center;
   background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
   color: #fff;
-  padding: 60px 40px 60px 40px;
-  margin: 0;
-  min-height: 0;
+  padding: 40px 20px;
   position: relative;
 }
 
-.whychoose-overlay {
+.whychoose-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1;
+}
+
+.whychoose-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
   position: relative;
   z-index: 2;
 }
 
-.whychoose-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 32px;
-  flex-wrap: wrap;
-  gap: 16px;
-}
-
-.whychoose-header h2 {
-  font-size: 2rem;
+.whychoose-title {
+  font-size: 1.8rem;
   font-weight: 700;
-  margin: 0;
-  flex: 1;
-  min-width: 200px;
+  margin: 0 0 16px 0;
+  color: #ffffff;
 }
 
 .whychoose-learn-btn {
-  background: #ffd740;
-  border: 1px solid #ffd740;
-  color: #000000 ;
-  font-size: 1.1rem;
+  background: linear-gradient(135deg, #ffd740, #ffe082);
+  border: none;
+  color: #23201d;
+  font-size: 1rem;
   font-weight: 600;
-  padding: 12px 28px;
-  border-radius: 2px;
-  cursor: pointer;
-  transition: background 0.2s, color 0.2s;
-  margin-top: 4px;
-  white-space: nowrap;
-}
-.whychoose-header .whychoose-learn-btn:hover {
-  background: #ffd740 !important;
-  color: #000000 !important;
-}
-
-.whychoose-features {
-  display: flex;
-  gap: 32px;
-  justify-content: space-between;
-  flex-wrap: wrap;
-}
-
-.whychoose-features .feature-card {
-  background: rgba(255, 255, 255, 0) !important;
-  backdrop-filter: blur(15px) !important;
-  -webkit-backdrop-filter: blur(15px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 10px 24px;
   border-radius: 8px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-  flex: 1 1 300px;
-  min-width: 280px;
-  max-width: 400px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin: 0 0 0 0;
-  padding: 20px;
+  cursor: pointer;
   transition: all 0.3s ease;
+  margin-top: 24px;
+  box-shadow: 0 4px 12px rgba(255, 215, 64, 0.3);
 }
 
-/* Additional rule to ensure no white background */
-.whychoose-features .feature-card,
-.whychoose-features .feature-card * {
-  background-color: transparent !important;
+.whychoose-learn-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255, 215, 64, 0.4);
 }
 
-.feature-img {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  border-radius: 2px;
-  margin-bottom: 18px;
+.whychoose-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-top: 24px;
 }
 
-.whychoose-features .feature-card h3 {
-  font-size: 1.35rem;
+.whychoose-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  padding: 16px;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.whychoose-icon {
+  display: none;
+}
+
+.whychoose-card h3 {
+  font-size: 1.1rem;
   font-weight: 700;
-  margin: 0 0 10px 0;
-  color: #000000 !important;
+  margin: 0 0 8px 0;
+  color: #ffffff;
 }
 
-.whychoose-features .feature-card p {
-  font-size: 1.18rem;
-  color: #000000 !important;
+.whychoose-card p {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
   margin: 0;
   line-height: 1.5;
 }
 
-.whychoose-features .feature-card:hover {
-  background: rgba(255, 255, 255, 0.08) !important;
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
-  border: 2px solid #ffd740 !important;
+.whychoose-card:hover {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 2px solid #ffd740;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
-  transform: translateY(-2px);
+  transform: translateY(-4px);
 }
 
 @media (max-width: 1200px) {
-  .whychoose-features {
+  .whychoose-grid {
     gap: 24px;
-  }
-  .whychoose-features .feature-card {
-    flex: 1 1 280px;
-    min-width: 260px;
-  }
-}
-
-@media (max-width: 1100px) {
-  .whychoose-features {
-    flex-direction: column;
-    gap: 24px;
-    align-items: center;
-  }
-  .whychoose-features .feature-card {
-    max-width: 500px;
-    width: 100%;
   }
 }
 
 @media (max-width: 900px) {
-  .whychoose-root {
-    padding: 40px 20px 50px 20px;
+  .whychoose-section {
+    padding: 30px 16px 40px 16px;
   }
-  .whychoose-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
-    margin-bottom: 28px;
-  }
-  .whychoose-header h2 {
-    font-size: 1.5rem;
-    min-width: auto;
+  .whychoose-container h2 {
+    font-size: 1.4rem;
   }
   .whychoose-learn-btn {
+    font-size: 0.95rem;
+    padding: 8px 20px;
+  }
+  .whychoose-card h3 {
     font-size: 1rem;
-    padding: 10px 20px;
-    align-self: flex-start;
   }
-  .feature-img {
-    height: 200px;
+  .whychoose-card p {
+    font-size: 0.85rem;
   }
-  .whychoose-features .feature-card h3 {
-    font-size: 1.25rem;
-    color: #000000 !important;
-  }
-  .whychoose-features .feature-card p {
-    font-size: 1.05rem;
-    color: #000000 !important;
-  }
-  .whychoose-features .feature-card {
-    padding: 18px;
+  .whychoose-card {
+    padding: 14px;
   }
 }
 
 @media (max-width: 600px) {
-  .whychoose-root {
+  .whychoose-section {
     padding: 30px 16px 40px 16px;
   }
-  .whychoose-header {
-    gap: 12px;
-    margin-bottom: 24px;
-  }
-  .whychoose-header h2 {
+  .whychoose-container h2 {
     font-size: 1.3rem;
   }
   .whychoose-learn-btn {
     font-size: 0.95rem;
     padding: 8px 16px;
   }
-  .whychoose-features .feature-card h3 {
+  .whychoose-card h3 {
     font-size: 1.15rem;
-    color: #000000 !important;
   }
-  .whychoose-features .feature-card p {
+  .whychoose-card p {
     font-size: 1rem;
-    color: #000000 !important;
   }
-  .feature-img {
-    height: 160px;
-  }
-  .whychoose-features {
+  .whychoose-grid {
     gap: 20px;
   }
-  .whychoose-features .feature-card {
+  .whychoose-card {
     padding: 16px;
-    min-width: auto;
   }
 }
 
 @media (max-width: 480px) {
-  .whychoose-root {
+  .whychoose-section {
     padding: 24px 12px 32px 12px;
   }
-  .whychoose-header h2 {
+  .whychoose-container h2 {
     font-size: 1.2rem;
   }
   .whychoose-learn-btn {
     font-size: 0.9rem;
     padding: 6px 12px;
   }
-  .whychoose-features .feature-card h3 {
+  .whychoose-card h3 {
     font-size: 1.1rem;
-    color: #000000 !important;
   }
-  .whychoose-features .feature-card p {
+  .whychoose-card p {
     font-size: 0.95rem;
-    color: #000000 !important;
   }
-  .feature-img {
-    height: 140px;
-  }
-  .whychoose-features .feature-card {
+  .whychoose-card {
     padding: 14px;
   }
 } 

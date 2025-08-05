@@ -686,10 +686,9 @@ const user = authContext?.user;
                   }} />
 
                   <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: '1fr auto',
-                    gap: '20px',
-                    alignItems: 'center'
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '20px'
                   }}>
                     <div>
                       <div style={{
@@ -727,7 +726,8 @@ const user = authContext?.user;
                           <div style={{
                             display: 'flex',
                             alignItems: 'center',
-                            gap: '8px'
+                            gap: '8px',
+                            flexWrap: 'wrap'
                           }}>
                             <span style={{
                               padding: '4px 12px',
@@ -814,13 +814,12 @@ const user = authContext?.user;
                       </div>
                     </div>
 
+                    {/* Action buttons - now below the booking info */}
                     <div style={{
                       display: 'flex',
-                      flexDirection: 'column',
                       gap: '12px',
-                      alignItems: 'flex-end',
-                      justifyContent: 'flex-end',
-                      height: '100%'
+                      justifyContent: 'center',
+                      flexWrap: 'wrap'
                     }}>
                       {b.status === 'pending' && (
                         <button style={{ 

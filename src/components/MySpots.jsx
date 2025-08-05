@@ -31,6 +31,11 @@ const ParkingSpotList = ({ spots, searchQuery, priceFilter, availabilityFilter, 
       (availabilityFilter === 'unavailable' && !isAvailable);
     
     return matchesSearch && matchesPrice && matchesAvailability;
+  }).sort((a, b) => {
+    // Sort alphabetically by name (A to Z)
+    const nameA = (a.name || a.address || '').toLowerCase();
+    const nameB = (b.name || b.address || '').toLowerCase();
+    return nameA.localeCompare(nameB);
   });
 
   const handleBook = (spot) => {
@@ -142,88 +147,98 @@ const ParkingSpotList = ({ spots, searchQuery, priceFilter, availabilityFilter, 
                 }} />
 
                 <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'auto 1fr auto',
-                  gap: '16px',
-                  alignItems: 'center'
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '16px'
                 }}>
-                  {/* Parking icon */}
+                  {/* Top section with icon and info */}
                   <div style={{
-                    width: '60px',
-                    height: '60px',
-                    background: 'linear-gradient(135deg, #ffd740, #ffe082)',
-                    borderRadius: '12px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '2rem',
-                    color: '#23201d',
-                    fontWeight: 'bold'
+                    display: 'grid',
+                    gridTemplateColumns: 'auto 1fr',
+                    gap: '16px',
+                    alignItems: 'center'
                   }}>
-                    
-                  </div>
-
-                  {/* Spot info */}
-                  <div>
-                    <h3 style={{
-                      color: '#ffffff',
-                      fontSize: '1.2rem',
-                      fontWeight: '700',
-                      margin: '0 0 4px 0'
-                    }}>{spot.name || 'Parking Spot'}</h3>
-                    <p style={{
-                      color: 'rgba(255, 255, 255, 0.7)',
-                      fontSize: '0.9rem',
-                      margin: '0 0 8px 0'
-                    }}>{spot.address}</p>
+                    {/* Parking icon */}
                     <div style={{
+                      width: '60px',
+                      height: '60px',
+                      background: 'linear-gradient(135deg, #ffd740, #ffe082)',
+                      borderRadius: '12px',
                       display: 'flex',
                       alignItems: 'center',
-                      gap: '12px'
+                      justifyContent: 'center',
+                      fontSize: '2rem',
+                      color: '#23201d',
+                      fontWeight: 'bold'
                     }}>
-                      {spot.price && (
+                      
+                    </div>
+
+                    {/* Spot info */}
+                    <div>
+                      <h3 style={{
+                        color: '#ffffff',
+                        fontSize: '1.2rem',
+                        fontWeight: '700',
+                        margin: '0 0 4px 0'
+                      }}>{spot.name || 'Parking Spot'}</h3>
+                      <p style={{
+                        color: 'rgba(255, 255, 255, 0.7)',
+                        fontSize: '0.9rem',
+                        margin: '0 0 8px 0'
+                      }}>{spot.address}</p>
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '12px',
+                        flexWrap: 'wrap'
+                      }}>
+                        {spot.price && (
+                          <span style={{
+                            background: 'rgba(255, 215, 64, 0.2)',
+                            color: '#ffd740',
+                            padding: '4px 8px',
+                            borderRadius: '6px',
+                            fontSize: '0.85rem',
+                            fontWeight: '600'
+                          }}>
+                             ${spot.price}/hr
+                          </span>
+                        )}
                         <span style={{
-                          background: 'rgba(255, 215, 64, 0.2)',
-                          color: '#ffd740',
+                          background: isAvailable 
+                            ? 'rgba(76, 175, 80, 0.2)' 
+                            : 'rgba(244, 67, 54, 0.2)',
+                          color: isAvailable ? '#4caf50' : '#f44336',
                           padding: '4px 8px',
                           borderRadius: '6px',
                           fontSize: '0.85rem',
                           fontWeight: '600'
                         }}>
-                           ${spot.price}/hr
+                          {isAvailable ? '✅ Available' : '❌ Currently Occupied'}
                         </span>
-                      )}
-                      <span style={{
-                        background: isAvailable 
-                          ? 'rgba(76, 175, 80, 0.2)' 
-                          : 'rgba(244, 67, 54, 0.2)',
-                        color: isAvailable ? '#4caf50' : '#f44336',
-                        padding: '4px 8px',
-                        borderRadius: '6px',
-                        fontSize: '0.85rem',
-                        fontWeight: '600'
-                      }}>
-                        {isAvailable ? '✅ Available' : '❌ Currently Occupied'}
-                      </span>
+                      </div>
                     </div>
                   </div>
 
-                  {/* Action buttons */}
+                  {/* Action buttons - now below the spot info */}
                   <div style={{
                     display: 'flex',
-                    flexDirection: 'column',
-                    gap: '8px'
+                    gap: '12px',
+                    justifyContent: 'center',
+                    flexWrap: 'wrap'
                   }}>
                     <button style={{
                       background: isAvailable ? '#ffd740' : '#ccc',
                       color: isAvailable ? '#23201d' : '#666',
                       border: 'none',
                       borderRadius: '8px',
-                      padding: '8px 16px',
+                      padding: '12px 20px',
                       fontWeight: '600',
                       cursor: isAvailable ? 'pointer' : 'not-allowed',
-                      fontSize: '0.85rem',
-                      transition: 'all 0.3s ease'
+                      fontSize: '0.9rem',
+                      transition: 'all 0.3s ease',
+                      minWidth: '120px'
                     }} onClick={() => handleBook(spot)}>
                        {isAvailable ? 'Book Now' : 'Occupied'}
                     </button>
@@ -232,11 +247,12 @@ const ParkingSpotList = ({ spots, searchQuery, priceFilter, availabilityFilter, 
                       color: '#ffffff',
                       border: '1px solid rgba(255, 255, 255, 0.2)',
                       borderRadius: '8px',
-                      padding: '8px 16px',
+                      padding: '12px 20px',
                       fontWeight: '600',
                       cursor: 'pointer',
-                      fontSize: '0.85rem',
-                      transition: 'all 0.3s ease'
+                      fontSize: '0.9rem',
+                      transition: 'all 0.3s ease',
+                      minWidth: '120px'
                     }} onClick={() => handleDirections(spot.lat, spot.lng)}>
                        Directions
                     </button>
@@ -288,6 +304,8 @@ const MySpots = () => {
     user = null;
   }
 
+
+
   // Function to check if a spot is available
   const checkSpotAvailability = async (spotId) => {
     try {
@@ -328,15 +346,8 @@ const MySpots = () => {
         const querySnapshot = await getDocs(collection(db, "parkingSpots"));
         const spots = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         
-        // Check availability for each spot
-        const spotsWithAvailability = await Promise.all(
-          spots.map(async (spot) => {
-            const isAvailable = await checkSpotAvailability(spot.id);
-            return { ...spot, availability: isAvailable };
-          })
-        );
-        
-        setParkingSpots(spotsWithAvailability);
+        // Set spots without checking availability initially to prevent infinite loops
+        setParkingSpots(spots);
         setLastFetchTime(new Date());
       } catch (error) {
         console.error('Error fetching spots:', error);
@@ -476,70 +487,15 @@ const MySpots = () => {
     }
   };
 
-  const handleViewModeToggle = () => {
-    console.log('View mode toggle clicked!');
+  const handleLogout = async () => {
+    console.log('Logout button clicked!');
     try {
-      const newViewMode = viewMode === 'map' ? 'list' : 'map';
-      setViewMode(newViewMode);
-      console.log('View mode changed to:', newViewMode);
+      await signOut(auth);
+      console.log('Sign out successful, navigating to login...');
+      navigate('/login');
     } catch (error) {
-      console.error('View mode toggle error:', error);
-      alert('Failed to switch view mode. Please try again.');
-    }
-  };
-
-  const handleRefresh = () => {
-    console.log('Refresh button clicked!');
-    try {
-      setLastFetchTime(null);
-      setError(null);
-      setLoading(true);
-      
-      // Force a fresh fetch of spots
-      const fetchSpotsWithAvailability = async () => {
-        try {
-          const querySnapshot = await getDocs(collection(db, "parkingSpots"));
-          const spots = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-          
-          // Check availability for each spot
-          const spotsWithAvailability = await Promise.all(
-            spots.map(async (spot) => {
-              const isAvailable = await checkSpotAvailability(spot.id);
-              return { ...spot, availability: isAvailable };
-            })
-          );
-          
-          setParkingSpots(spotsWithAvailability);
-          setLastFetchTime(new Date());
-          console.log('Refresh completed successfully');
-        } catch (error) {
-          console.error('Error fetching spots:', error);
-          setError('Failed to load parking spots. Please try again.');
-        } finally {
-          setLoading(false);
-        }
-      };
-      
-      fetchSpotsWithAvailability();
-    } catch (error) {
-      console.error('Refresh error:', error);
-      alert('Failed to refresh data. Please try again.');
-    }
-  };
-
-  const handleSignOut = () => {
-    console.log('Sign out button clicked!');
-    try {
-      signOut(auth).then(() => {
-        console.log('User signed out successfully');
-        navigate('/');
-      }).catch((error) => {
-        console.error('Sign out error:', error);
-        alert('Failed to sign out. Please try again.');
-      });
-    } catch (error) {
-      console.error('Sign out error:', error);
-      alert('Failed to sign out. Please try again.');
+      console.error('Logout error:', error);
+      alert('Logout failed. Please try again.');
     }
   };
 
@@ -565,108 +521,89 @@ const MySpots = () => {
             {/* Header content without logo since LogoOnlyNavbar handles it */}
           </div>
           <div className="header-actions">
-            <button 
-              type="button"
-              onClick={handleViewModeToggle}
-              style={{
-                padding: '12px 20px',
-                fontSize: '14px',
-                fontWeight: '600',
-                borderRadius: '10px',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                background: 'linear-gradient(135deg, #ffd740, #ffe082)',
-                color: '#23201d',
-                border: 'none',
-                boxShadow: '0 4px 12px rgba(255, 215, 64, 0.3)',
-                position: 'relative',
-                zIndex: 10,
-                minWidth: '120px',
-                justifyContent: 'center'
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.transform = 'translateY(-2px)';
-                e.target.style.boxShadow = '0 6px 16px rgba(255, 215, 64, 0.4)';
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.transform = 'translateY(0)';
-                e.target.style.boxShadow = '0 4px 12px rgba(255, 215, 64, 0.3)';
-              }}
-            >
-              {viewMode === 'map' ? '📋 List View' : '🗺️ Map View'}
-            </button>
-            <button 
-              type="button"
-              onClick={handleRefresh}
-              style={{
-                padding: '12px 20px',
-                fontSize: '14px',
-                fontWeight: '600',
-                borderRadius: '10px',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                background: 'linear-gradient(135deg, #4caf50, #66bb6a)',
-                color: '#ffffff',
-                border: 'none',
-                boxShadow: '0 4px 12px rgba(76, 175, 80, 0.3)',
-                position: 'relative',
-                zIndex: 10,
-                minWidth: '120px',
-                justifyContent: 'center'
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.transform = 'translateY(-2px)';
-                e.target.style.boxShadow = '0 6px 16px rgba(76, 175, 80, 0.4)';
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.transform = 'translateY(0)';
-                e.target.style.boxShadow = '0 4px 12px rgba(76, 175, 80, 0.3)';
-              }}
-            >
-              🔄 Refresh
-            </button>
-            <button 
-              type="button"
-              onClick={handleSignOut}
-              style={{
-                padding: '12px 20px',
-                fontSize: '14px',
-                fontWeight: '600',
-                borderRadius: '10px',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                background: 'linear-gradient(135deg, #f44336, #e57373)',
-                color: '#ffffff',
-                border: 'none',
-                boxShadow: '0 4px 12px rgba(244, 67, 54, 0.3)',
-                position: 'relative',
-                zIndex: 10,
-                minWidth: '120px',
-                justifyContent: 'center'
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.transform = 'translateY(-2px)';
-                e.target.style.boxShadow = '0 6px 16px rgba(244, 67, 54, 0.4)';
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.transform = 'translateY(0)';
-                e.target.style.boxShadow = '0 4px 12px rgba(244, 67, 54, 0.3)';
-              }}
-            >
-              🚪 Sign Out
-            </button>
+            {/* Header actions removed - using fixed logout button instead */}
           </div>
         </div>
       </header>
+
+            {/* Top Right Buttons - Logout and View Toggle */}
+      <div style={{
+        position: 'fixed',
+        top: '20px',
+        right: '20px',
+        zIndex: 9999,
+        display: 'flex',
+        gap: '10px',
+        alignItems: 'center'
+      }}>
+        {/* View Toggle Buttons */}
+        <button
+          onClick={() => setViewMode('map')}
+          style={{
+            background: viewMode === 'map' 
+              ? 'linear-gradient(135deg, #ffd740, #ffe082)' 
+              : 'rgba(255, 255, 255, 0.1)',
+            color: viewMode === 'map' ? '#23201d' : '#ffffff',
+            border: '1px solid rgba(255, 255, 255, 0.2)',
+            borderRadius: '10px',
+            padding: '10px 16px',
+            fontWeight: '600',
+            cursor: 'pointer',
+            fontSize: '14px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            transition: 'all 0.3s ease',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)'
+          }}
+        >
+          🗺️ Map
+        </button>
+        <button
+          onClick={() => setViewMode('list')}
+          style={{
+            background: viewMode === 'list' 
+              ? 'linear-gradient(135deg, #ffd740, #ffe082)' 
+              : 'rgba(255, 255, 255, 0.1)',
+            color: viewMode === 'list' ? '#23201d' : '#ffffff',
+            border: '1px solid rgba(255, 255, 255, 0.2)',
+            borderRadius: '10px',
+            padding: '10px 16px',
+            fontWeight: '600',
+            cursor: 'pointer',
+            fontSize: '14px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            transition: 'all 0.3s ease',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)'
+          }}
+        >
+          📋 List
+        </button>
+        
+        {/* Logout Button */}
+        <button
+          onClick={handleLogout}
+          style={{
+            background: 'linear-gradient(135deg, #ffd740, #ffe082)',
+            color: '#23201d',
+            border: 'none',
+            borderRadius: '10px',
+            padding: '12px 24px',
+            fontWeight: '600',
+            cursor: 'pointer',
+            fontSize: '16px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+            position: 'relative'
+          }}
+        >
+          Logout
+        </button>
+      </div>
 
       {/* Search and Filters Section */}
       <section className="search-filters-section">
@@ -828,7 +765,48 @@ const MySpots = () => {
                 </button>
               </div>
             ) : viewMode === 'map' ? (
-              <LeafletMapView />
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '100%',
+                color: '#ffd740',
+                fontSize: '1.2rem',
+                fontWeight: '600',
+                textAlign: 'center',
+                padding: '20px',
+                background: 'linear-gradient(135deg, rgba(255, 215, 64, 0.1) 0%, rgba(255, 215, 64, 0.05) 100%)',
+                borderRadius: '16px',
+                border: '1px solid rgba(255, 215, 64, 0.2)'
+              }}>
+                <div>
+                  <div style={{ fontSize: '4rem', marginBottom: '16px' }}></div>
+                  <div style={{ fontSize: '1.5rem', marginBottom: '8px' }}>Map View</div>
+                  <div style={{ fontSize: '1rem', color: '#cccccc', marginTop: '8px', maxWidth: '300px', marginBottom: '20px' }}>
+                    Interactive map view is temporarily disabled to prevent rendering issues. 
+                    Please use the List View to browse parking spots.
+                  </div>
+                  <button
+                    onClick={() => setViewMode('list')}
+                    style={{
+                      background: 'linear-gradient(135deg, #ffd740, #ffe082)',
+                      color: '#23201d',
+                      border: 'none',
+                      borderRadius: '10px',
+                      padding: '12px 24px',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      fontSize: '14px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      margin: '0 auto'
+                    }}
+                  >
+                     Switch to List View
+                  </button>
+                </div>
+              </div>
             ) : (
               <ParkingSpotList 
                 spots={parkingSpots}
