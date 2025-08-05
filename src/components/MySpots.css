@@ -2,7 +2,11 @@
 
 .myspots-root {
   min-height: 100vh;
-  background: linear-gradient(135deg, #232323 0%, #2a2a2a 100%);
+  background: linear-gradient(rgba(35, 35, 35, 0.95), rgba(35, 35, 35, 0.95)), url('../imgs/footer back.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   font-family: 'Segoe UI', Arial, sans-serif;
   color: #ffffff;
   display: flex;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import { db, auth } from "../firebase";
 import { collection, query, where, getDocs, addDoc, doc, updateDoc, getDoc, deleteDoc } from "firebase/firestore";
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../main';
 
 // Error Boundary Component
@@ -58,6 +58,7 @@ const MyBookings = () => {
   const [userName, setUserName] = useState("");
   const [parkingSpots, setParkingSpots] = useState({}); // Store parking spot details
   const location = useLocation();
+  const navigate = useNavigate();
   const params = new URLSearchParams(location.search);
   const paymentSuccess = params.get('success') === '1';
   
@@ -897,7 +898,7 @@ const user = authContext?.user;
                           e.target.style.transform = 'translateY(0) scale(1)';
                           e.target.style.boxShadow = '0 6px 20px rgba(76, 175, 80, 0.3)';
                         }}
-                        onClick={() => window.location.href = '/reviews'}>
+                        onClick={() => navigate('/reviews')}>
                            Write Review
                         </button>
                       )}
