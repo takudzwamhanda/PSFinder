@@ -21,7 +21,7 @@ const FooterCTA = () => (
         <Link to="/login" className="footer-link">Login</Link>
       </div>
           <div className="footer-contact-row">
-            <span>Email: info@psfinder.com</span> | <span>Phone: +263 771 830 494</span>
+            <span>Email: mhandatakudzwa07@gmail.com</span> | <span>Phone: +263 771 830 494</span>
           </div>
           <div className="footer-social-row">
             <a href="#" className="footer-social-icon" aria-label="Twitter">
@@ -37,7 +37,7 @@ const FooterCTA = () => (
       </div>
     </div>
     <div className="footer-modern-bottom">
-      © 2025 Parking Space Finder. All rights reserved.
+      © 2025 Takudzwa Mhanda. All rights reserved.
       </div>
     </div>
   </footer>
