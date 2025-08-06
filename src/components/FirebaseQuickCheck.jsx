@@ -3,115 +3,93 @@ import { auth } from "../firebase";
 import { sendEmailVerification } from "firebase/auth";
 import "./Login.css";
 
-const FirebaseConfigCheck = () => {
-  const [configStatus, setConfigStatus] = useState({
-    firebaseConfig: false,
+const FirebaseQuickCheck = () => {
+  const [status, setStatus] = useState({
+    firebaseConnected: false,
     authDomain: false,
     emailVerification: false,
-    networkConnection: false,
-    userAuthenticated: false,
-    emailVerified: false
+    networkConnection: false
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [currentUser, setCurrentUser] = useState(null);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    checkFirebaseConfiguration();
+    checkFirebaseStatus();
   }, []);
 
-  const checkFirebaseConfiguration = async () => {
+  const checkFirebaseStatus = async () => {
     try {
       setLoading(true);
       setError(null);
 
-      // Check if Firebase is initialized
+      // Check Firebase connection
       if (auth) {
-        setConfigStatus(prev => ({ ...prev, firebaseConfig: true }));
+        setStatus(prev => ({ ...prev, firebaseConnected: true }));
       }
 
       // Check auth domain
-      if (auth.config.authDomain && auth.config.authDomain !== 'localhost') {
-        setConfigStatus(prev => ({ ...prev, authDomain: true }));
+      if (auth.config.authDomain) {
+        setStatus(prev => ({ ...prev, authDomain: true }));
       }
 
-      // Check network connection
+      // Check network
       try {
-        const response = await fetch('https://www.google.com', { 
-          method: 'HEAD',
-          mode: 'no-cors'
-        });
-        setConfigStatus(prev => ({ ...prev, networkConnection: true }));
+        await fetch('https://www.google.com', { method: 'HEAD', mode: 'no-cors' });
+        setStatus(prev => ({ ...prev, networkConnection: true }));
       } catch (networkError) {
         console.error('Network check failed:', networkError);
-        setConfigStatus(prev => ({ ...prev, networkConnection: false }));
       }
 
       // Check current user
-      const user = auth.currentUser;
-      if (user) {
-        setCurrentUser(user);
-        setConfigStatus(prev => ({ 
-          ...prev, 
-          userAuthenticated: true,
-          emailVerified: user.emailVerified
-        }));
+      const currentUser = auth.currentUser;
+      if (currentUser) {
+        setUser(currentUser);
+        
+        // Test email verification
+        try {
+          if (!currentUser.emailVerified) {
+            await sendEmailVerification(currentUser);
+            setStatus(prev => ({ ...prev, emailVerification: true }));
+          } else {
+            setStatus(prev => ({ ...prev, emailVerification: true }));
+          }
+        } catch (emailError) {
+          console.error('Email verification test failed:', emailError);
+          setError(emailError);
+          setStatus(prev => ({ ...prev, emailVerification: false }));
+        }
       }
 
-      // Test email verification (this will fail if not configured properly)
-      try {
-        if (user && !user.emailVerified) {
-          await sendEmailVerification(user);
-          setConfigStatus(prev => ({ ...prev, emailVerification: true }));
-        } else if (user && user.emailVerified) {
-          setConfigStatus(prev => ({ ...prev, emailVerification: true }));
-        } else {
-          setConfigStatus(prev => ({ ...prev, emailVerification: false }));
-        }
-      } catch (emailError) {
-        console.error('Email verification test failed:', emailError);
-        setConfigStatus(prev => ({ ...prev, emailVerification: false }));
-        setError(emailError);
-      }
-      
     } catch (error) {
-      console.error('Configuration check failed:', error);
+      console.error('Firebase check failed:', error);
       setError(error);
     } finally {
       setLoading(false);
     }
   };
 
-  const getStatusIcon = (status) => {
-    return status ? '✅' : '❌';
-  };
-
-  const getStatusColor = (status) => {
-    return status ? '#4caf50' : '#f44336';
-  };
+  const getStatusIcon = (status) => status ? '✅' : '❌';
+  const getStatusColor = (status) => status ? '#4caf50' : '#f44336';
 
   const getRecommendations = () => {
     const recommendations = [];
     
-    if (!configStatus.networkConnection) {
-      recommendations.push("Check your internet connection and try again");
+    if (!status.networkConnection) {
+      recommendations.push("Check your internet connection");
     }
     
-    if (!configStatus.authDomain) {
+    if (!status.authDomain) {
       recommendations.push("Add your domain to Firebase authorized domains");
     }
     
-    if (!configStatus.emailVerification) {
+    if (!status.emailVerification) {
       recommendations.push("Enable email verification in Firebase Console");
-      recommendations.push("Check if your Firebase project has reached its quota");
+      recommendations.push("Check if Firebase quota is exceeded");
     }
     
-    if (!configStatus.userAuthenticated) {
-      recommendations.push("You need to be logged in to test email verification");
-    }
-    
-    if (configStatus.userAuthenticated && !configStatus.emailVerified) {
-      recommendations.push("Your email is not verified. Check your inbox and spam folder");
+    if (error) {
+      recommendations.push(`Error: ${error.code} - ${error.message}`);
     }
     
     return recommendations;
@@ -141,7 +119,7 @@ const FirebaseConfigCheck = () => {
   return (
     <div className="login-container">
       <div className="login-logo">P</div>
-      <h2 className="login-title">Firebase Configuration Status</h2>
+      <h2 className="login-title">Firebase Quick Check</h2>
       
       <div style={{
         background: 'linear-gradient(135deg, rgba(255, 215, 64, 0.1), rgba(255, 215, 64, 0.05))',
@@ -149,8 +127,7 @@ const FirebaseConfigCheck = () => {
         borderRadius: '16px',
         padding: '24px',
         marginBottom: '24px',
-        textAlign: 'left',
-        boxShadow: '0 4px 12px rgba(255, 215, 64, 0.1)'
+        textAlign: 'left'
       }}>
         <div style={{ 
           fontSize: '1.2rem', 
@@ -159,10 +136,10 @@ const FirebaseConfigCheck = () => {
           fontWeight: '600',
           textAlign: 'center'
         }}>
-          🔧 System Diagnostics
+          🔧 Configuration Status
         </div>
         
-        {Object.entries(configStatus).map(([key, status]) => (
+        {Object.entries(status).map(([key, statusValue]) => (
           <div key={key} style={{
             display: 'flex',
             alignItems: 'center',
@@ -172,10 +149,10 @@ const FirebaseConfigCheck = () => {
             borderRadius: '6px'
           }}>
             <span style={{ marginRight: '8px', fontSize: '16px' }}>
-              {getStatusIcon(status)}
+              {getStatusIcon(statusValue)}
             </span>
             <span style={{ 
-              color: getStatusColor(status),
+              color: getStatusColor(statusValue),
               fontWeight: '500',
               fontSize: '14px'
             }}>
@@ -185,7 +162,7 @@ const FirebaseConfigCheck = () => {
         ))}
       </div>
 
-      {currentUser && (
+      {user && (
         <div style={{
           background: 'rgba(76, 175, 80, 0.1)',
           border: '1px solid rgba(76, 175, 80, 0.3)',
@@ -195,28 +172,10 @@ const FirebaseConfigCheck = () => {
           textAlign: 'center'
         }}>
           <div style={{ color: '#4caf50', fontWeight: '600', marginBottom: '8px' }}>
-            👤 Current User: {currentUser.email}
+            👤 User: {user.email}
           </div>
           <div style={{ fontSize: '14px', opacity: '0.8' }}>
-            Email Verified: {currentUser.emailVerified ? '✅ Yes' : '❌ No'}
-          </div>
-        </div>
-      )}
-
-      {error && (
-        <div style={{
-          background: 'rgba(244, 67, 54, 0.1)',
-          border: '1px solid rgba(244, 67, 54, 0.3)',
-          borderRadius: '8px',
-          padding: '12px',
-          marginBottom: '16px'
-        }}>
-          <div style={{ color: '#f44336', fontWeight: '600', marginBottom: '8px' }}>
-            ❌ Error Details:
-          </div>
-          <div style={{ fontSize: '14px', color: '#f44336' }}>
-            {error.code && <div>Code: {error.code}</div>}
-            {error.message && <div>Message: {error.message}</div>}
+            Email Verified: {user.emailVerified ? '✅ Yes' : '❌ No'}
           </div>
         </div>
       )}
@@ -246,14 +205,14 @@ const FirebaseConfigCheck = () => {
         </div>
       )}
 
-      <div style={{
+      <div style={{ 
         display: 'flex', 
         flexDirection: 'column', 
         gap: '12px',
         marginTop: '20px'
       }}>
         <button
-          onClick={checkFirebaseConfiguration}
+          onClick={checkFirebaseStatus}
           style={{
             background: 'linear-gradient(135deg, #ffd740, #ffe082)',
             color: '#23201d',
@@ -268,6 +227,24 @@ const FirebaseConfigCheck = () => {
           }}
         >
           🔄 Recheck Configuration
+        </button>
+        
+        <button
+          onClick={() => window.location.href = '/email-verification-test'}
+          style={{
+            background: 'linear-gradient(135deg, #2196f3, #42a5f5)',
+            color: '#ffffff',
+            border: 'none',
+            borderRadius: '12px',
+            padding: '16px 24px',
+            fontWeight: '600',
+            fontSize: '16px',
+            cursor: 'pointer',
+            transition: 'all 0.3s ease',
+            boxShadow: '0 4px 12px rgba(33, 150, 243, 0.3)'
+          }}
+        >
+          🧪 Test Email Verification
         </button>
         
         <button
@@ -291,4 +268,4 @@ const FirebaseConfigCheck = () => {
   );
 };
 
-export default FirebaseConfigCheck; 
+export default FirebaseQuickCheck; 
