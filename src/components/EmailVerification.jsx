@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
-import { sendEmailVerification, onAuthStateChanged } from "firebase/auth";
+import { sendEmailVerification, onAuthStateChanged, signOut } from "firebase/auth";
 import "./Login.css";
 
 const EmailVerification = () => {
@@ -10,6 +10,7 @@ const EmailVerification = () => {
   const [resendLoading, setResendLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState(""); // "success" or "error"
+  const [showFallbackOptions, setShowFallbackOptions] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -42,10 +43,26 @@ const EmailVerification = () => {
       });
       setMessage("✅ Verification email sent successfully! Please check your inbox and spam folder.");
       setMessageType("success");
+      setShowFallbackOptions(false);
     } catch (error) {
       console.error('Verification error:', error);
-      setMessage("❌ Email verification service temporarily unavailable. Please try logging in directly.");
+      
+      // Provide more specific error messages based on the error code
+      let errorMessage = "❌ Email verification service temporarily unavailable. Please try logging in directly.";
+      
+      if (error.code === 'auth/too-many-requests') {
+        errorMessage = "❌ Too many verification attempts. Please wait a few minutes before trying again.";
+      } else if (error.code === 'auth/quota-exceeded') {
+        errorMessage = "❌ Email service quota exceeded. Please try again later or contact support.";
+      } else if (error.code === 'auth/network-request-failed') {
+        errorMessage = "❌ Network connection failed. Please check your internet connection and try again.";
+      } else if (error.code === 'auth/operation-not-allowed') {
+        errorMessage = "❌ Email verification is not enabled for this project. Please contact support.";
+      }
+      
+      setMessage(errorMessage);
       setMessageType("error");
+      setShowFallbackOptions(true);
     } finally {
       setResendLoading(false);
     }
@@ -62,6 +79,27 @@ const EmailVerification = () => {
       console.error('Navigation error:', error);
       alert('Navigation failed. Please try again.');
     }
+  };
+
+  const handleSkipVerification = async () => {
+    try {
+      // Sign out the user and redirect to login
+      await signOut(auth);
+      navigate('/login');
+    } catch (error) {
+      console.error('Sign out error:', error);
+      alert('Failed to sign out. Please try again.');
+    }
+  };
+
+  const handleContactSupport = () => {
+    // You can customize this to open your support contact method
+    const supportEmail = "support@ps-finder.com"; // Replace with your actual support email
+    const subject = "Email Verification Issue";
+    const body = `Hello, I'm having trouble with email verification for my account: ${user?.email}`;
+    
+    const mailtoLink = `mailto:${supportEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.open(mailtoLink, '_blank');
   };
 
   if (loading) {
@@ -234,6 +272,64 @@ const EmailVerification = () => {
           fontWeight: '500'
         }}>
           {message}
+        </div>
+      )}
+
+      {showFallbackOptions && (
+        <div style={{
+          marginTop: '20px',
+          padding: '16px',
+          background: 'rgba(255, 152, 0, 0.1)',
+          border: '1px solid rgba(255, 152, 0, 0.3)',
+          borderRadius: '12px',
+          textAlign: 'center'
+        }}>
+          <div style={{ 
+            fontSize: '16px', 
+            fontWeight: '600', 
+            color: '#ff9800',
+            marginBottom: '12px'
+          }}>
+            🔧 Having trouble? Try these options:
+          </div>
+          <div style={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            gap: '8px'
+          }}>
+            <button
+              onClick={handleSkipVerification}
+              style={{
+                background: 'linear-gradient(135deg, #2196f3, #42a5f5)',
+                color: '#ffffff',
+                border: 'none',
+                borderRadius: '8px',
+                padding: '12px 16px',
+                fontWeight: '500',
+                fontSize: '14px',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+            >
+              🔄 Try Logging In Directly
+            </button>
+            <button
+              onClick={handleContactSupport}
+              style={{
+                background: 'linear-gradient(135deg, #9c27b0, #ba68c8)',
+                color: '#ffffff',
+                border: 'none',
+                borderRadius: '8px',
+                padding: '12px 16px',
+                fontWeight: '500',
+                fontSize: '14px',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+            >
+              📧 Contact Support
+            </button>
+          </div>
         </div>
       )}
 
