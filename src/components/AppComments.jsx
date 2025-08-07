@@ -866,16 +866,19 @@ const user = authContext?.user;
                       </div>
                     ) : (
                       <p className="comment-text rich-text">
-                        {comment.comment
-                          .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                          .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                          .replace(/`(.*?)`/g, '<code>$1</code>')
-                          .split('\n').map((line, i) => (
-                            <span key={i}>
-                              {line}
-                              {i < comment.comment.split('\n').length - 1 && <br />}
-                            </span>
-                          ))}
+                        {comment.comment ? 
+                          comment.comment
+                            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                            .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                            .replace(/`(.*?)`/g, '<code>$1</code>')
+                            .split('\n').map((line, i) => (
+                              <span key={i}>
+                                {line}
+                                {i < comment.comment.split('\n').length - 1 && <br />}
+                              </span>
+                            ))
+                          : 'Comment content not available'
+                        }
                       </p>
                     )}
                   </div>
@@ -1075,16 +1078,19 @@ const user = authContext?.user;
                           </div>
                           
                                                      <p className="comment-text rich-text" style={{ fontSize: '0.9rem', margin: '0 0 8px 0' }}>
-                             {reply.comment
-                               .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                               .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                               .replace(/`(.*?)`/g, '<code>$1</code>')
-                               .split('\n').map((line, i) => (
-                                 <span key={i}>
-                                   {line}
-                                   {i < reply.comment.split('\n').length - 1 && <br />}
-                                 </span>
-                               ))}
+                             {reply.comment ? 
+                               reply.comment
+                                 .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                                 .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                                 .replace(/`(.*?)`/g, '<code>$1</code>')
+                                 .split('\n').map((line, i) => (
+                                   <span key={i}>
+                                     {line}
+                                     {i < reply.comment.split('\n').length - 1 && <br />}
+                                   </span>
+                                 ))
+                               : 'Reply content not available'
+                             }
                            </p>
                           
                           {/* Reply actions */}
